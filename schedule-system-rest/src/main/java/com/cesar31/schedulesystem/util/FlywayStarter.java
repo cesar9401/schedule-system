@@ -1,4 +1,4 @@
-package com.cesar31.schedulesystemrest.util;
+package com.cesar31.schedulesystem.util;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
