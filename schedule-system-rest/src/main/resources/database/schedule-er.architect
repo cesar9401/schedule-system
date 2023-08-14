@@ -270,13 +270,13 @@
     </index>
    </folder>
   </table>
-  <table id="TAB71" populated="true" UUID="13c7ed70-d7c8-4c3c-b388-22f08b3f94d3" name="subject_class_day" objectType="TABLE" physicalName="subject_class_day" >
+  <table id="TAB71" populated="true" UUID="13c7ed70-d7c8-4c3c-b388-22f08b3f94d3" name="ac_cy_sub_class_day" objectType="TABLE" physicalName="ac_cy_sub_class_day" >
    <remarks></remarks>
    <folder id="FOLTAB711" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL72" populated="true" UUID="5f229542-6ac1-4475-93ff-b832abb5594b" autoIncrement="false" autoIncrementSequenceName="subject_class_day_subject_class_day_id_seq" defaultValue="" name="subject_class_day_id" nullable="0" physicalName="subject_class_day_id" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
+    <column id="COL72" populated="true" UUID="5f229542-6ac1-4475-93ff-b832abb5594b" autoIncrement="false" autoIncrementSequenceName="ac_cy_sub_class_day_ac_cy_sub_class_day_id_seq" defaultValue="" name="ac_cy_sub_class_day_id" nullable="0" physicalName="ac_cy_sub_class_day_id" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
      <remarks></remarks>
     </column>
-    <column id="COL73" populated="true" UUID="b97840ff-4e6d-4505-b11d-53565d571ee5" autoIncrement="false" autoIncrementSequenceName="subject_class_day_cat_day_seq" defaultValue="" name="cat_day" nullable="0" physicalName="cat_day" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
+    <column id="COL73" populated="true" UUID="b97840ff-4e6d-4505-b11d-53565d571ee5" autoIncrement="false" autoIncrementSequenceName="ac_cy_sub_class_day_cat_day_seq" defaultValue="" name="cat_day" nullable="0" physicalName="cat_day" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
      <remarks></remarks>
     </column>
     <column id="COL74" populated="true" UUID="10f3eb89-7717-4900-88a4-c3f09d24970e" autoIncrement="false" autoIncrementSequenceName="academyc_cycle_subject_academyc_cycle_subject_id_seq" defaultValue="" name="ac_cy_subject_id" nullable="0" physicalName="ac_cy_subject_id" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
@@ -288,8 +288,8 @@
     <folder id="FOLTAB712" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
     </folder>
     <folder id="FOLTAB714" populated="true" name="Indices" physicalName="Indices" type="4">
-    <index id="IDX75" populated="true" UUID="ebdd0042-94c2-42d5-b71a-d8aeee0b0a71" clustered="false" name="subject_class_day_pk" physicalName="subject_class_day_pk" primaryKeyIndex="true" unique="false" >
-     <index-column id="IDC76" populated="true" UUID="95b82b2c-48d7-4ce5-8fb1-ced3cfd829b7" ascendingOrDescending="UNSPECIFIED" column-ref="COL72" name="subject_class_day_id" physicalName="subject_class_day_id" />
+    <index id="IDX75" populated="true" UUID="ebdd0042-94c2-42d5-b71a-d8aeee0b0a71" clustered="false" name="ac_cy_sub_class_day_pk" physicalName="subject_class_day_pk" primaryKeyIndex="true" unique="false" >
+     <index-column id="IDC76" populated="true" UUID="95b82b2c-48d7-4ce5-8fb1-ced3cfd829b7" ascendingOrDescending="UNSPECIFIED" column-ref="COL72" name="ac_cy_sub_class_day_id" physicalName="ac_cy_sub_class_day_id" />
     </index>
    </folder>
   </table>
@@ -393,7 +393,7 @@
  <ddl-generator type="ca.sqlpower.architect.ddl.SQLServer2005DDLGenerator" allow-connection="false"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
- <play-pen zoom="1.6817928305074283" viewportX="0" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+ <play-pen zoom="0.8408964152537143" viewportX="222" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
   <table-pane table-ref="TAB1" x="642" y="636" bgColor="0xbfd6ff" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB7" x="1871" y="756" bgColor="0xbfd6ff" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB13" x="641" y="53" bgColor="0xbfd6ff" fgColor="0x000000" rounded="false" dashed="false"/>
