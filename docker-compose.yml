@@ -1,0 +1,31 @@
+services:
+  mssql-schedule-system-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: fu6BkKsL3Kdx
+      TZ: America/Guatemala
+    ports:
+      - '1435:1433'
+    expose:
+      - '1433'
+    volumes:
+      - schedule-system-db:/var/opt/mssql/data
+  payara-schedule-system-rest:
+    image: schedule-system-rest:1.0-SNAPSHOT
+    restart: unless-stopped
+    environment:
+      DB_USER: sa
+      DB_PASSWORD: fu6BkKsL3Kdx
+      DB_HOST: mssql-schedule-system-db
+      DB_NAME: schedule-system-db
+      DB_PORT: 1433
+      DB_URL: 'jdbc:sqlserver://mssql-schedule-system-db:1433;encrypt=false;databaseName=schedule-system-db'
+    ports:
+      - '8081:8080'
+    depends_on:
+      - mssql-schedule-system-db
+volumes:
+  schedule-system-db:
