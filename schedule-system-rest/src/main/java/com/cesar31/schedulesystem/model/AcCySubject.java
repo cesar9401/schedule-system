@@ -36,10 +36,11 @@ public class AcCySubject {
     private AcademicCycle academicCycle;
 
     /**
-     * Unidirectional relationship with {@link Subject}
+     * Bidirectional relationship with {@link Subject}
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
+    @JsonBackReference(value = "academicCycle")
     private Subject subject;
 
     @Column(name = "section_code")
@@ -104,5 +105,21 @@ public class AcCySubject {
 
     public void setAcCySubClassDays(List<AcCySubClassDay> acCySubClassDays) {
         this.acCySubClassDays = acCySubClassDays;
+    }
+
+    public List<AcCySubjAssg> getAcCySubjAssignments() {
+        return acCySubjAssignments;
+    }
+
+    public void setAcCySubjAssignments(List<AcCySubjAssg> acCySubjAssignments) {
+        this.acCySubjAssignments = acCySubjAssignments;
+    }
+
+    public List<SubjectSchedule> getSubjectSchedules() {
+        return subjectSchedules;
+    }
+
+    public void setSubjectSchedules(List<SubjectSchedule> subjectSchedules) {
+        this.subjectSchedules = subjectSchedules;
     }
 }

@@ -43,6 +43,10 @@ public class Subject {
     @JsonManagedReference(value = "subject")
     private List<ProfessorSubject> professorSubjects;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "subject")
+    private List<AcCySubject> acCySubjects;
+
     public Long getSubjectId() {
         return subjectId;
     }
