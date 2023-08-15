@@ -79,4 +79,20 @@ public class AcademicCycle {
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
+
+    public List<AcCyClassDay> getClassDays() {
+        return classDays;
+    }
+
+    public void setClassDays(List<AcCyClassDay> classDays) {
+        this.classDays = classDays;
+    }
+
+    public List<AcCySubject> getAcCySubjects() {
+        return acCySubjects;
+    }
+
+    public void setAcCySubjects(List<AcCySubject> acCySubjects) {
+        this.acCySubjects = acCySubjects;
+    }
 }

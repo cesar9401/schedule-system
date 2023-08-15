@@ -52,6 +52,20 @@ public class AcCySubject {
     @JsonManagedReference(value = "acCySubject")
     private List<AcCySubClassDay> acCySubClassDays;
 
+    /**
+     * Bidirectional relationship with {@link AcCySubjAssg}
+     */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "acCySubject", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "acCySubject")
+    private List<AcCySubjAssg> acCySubjAssignments;
+
+    /**
+     * Bidirectional relationship with {@link SubjectSchedule}
+     */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "acCySubject", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "acCySubject")
+    private List<SubjectSchedule> subjectSchedules;
+
     public Long getAcCySubjectId() {
         return acCySubjectId;
     }
