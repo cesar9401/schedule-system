@@ -1,2 +1,2 @@
-FROM payara/micro:6.2023.5-jdk17
+FROM payara/micro:5.2022.5-jdk11
 COPY target/schedule-system.war $DEPLOY_DIR
