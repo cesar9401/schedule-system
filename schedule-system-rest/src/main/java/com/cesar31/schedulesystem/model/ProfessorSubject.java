@@ -38,6 +38,12 @@ public class ProfessorSubject {
     @JsonBackReference(value = "subject")
     private Subject subject;
 
+    @Column(name = "qualification")
+    private Double qualification;
+
+     @Column(name = "years_of_experience")
+    private Integer yearsOfExperience;
+
     public Long getProfessorSubjectId() {
         return professorSubjectId;
     }
@@ -60,5 +66,21 @@ public class ProfessorSubject {
 
     public void setSubject(Subject subject) {
         this.subject = subject;
+    }
+
+    public Double getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(Double qualification) {
+        this.qualification = qualification;
+    }
+
+    public Integer getYearsOfExperience() {
+        return yearsOfExperience;
+    }
+
+    public void setYearsOfExperience(Integer yearsOfExperience) {
+        this.yearsOfExperience = yearsOfExperience;
     }
 }

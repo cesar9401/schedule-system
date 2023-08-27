@@ -34,6 +34,9 @@ public class Professor {
     @Column(name = "date_of_hire")
     private LocalDateTime dateOfHire;
 
+    @Column(name = "average_qualification")
+    private Double averageQualification;
+
     /**
      * Bidirectional relationship with {@link ProfessorContractDay}
      */
@@ -85,6 +88,14 @@ public class Professor {
 
     public void setDateOfHire(LocalDateTime dateOfHire) {
         this.dateOfHire = dateOfHire;
+    }
+
+    public Double getAverageQualification() {
+        return averageQualification;
+    }
+
+    public void setAverageQualification(Double averageQualification) {
+        this.averageQualification = averageQualification;
     }
 
     public List<ProfessorContractDay> getContractDays() {

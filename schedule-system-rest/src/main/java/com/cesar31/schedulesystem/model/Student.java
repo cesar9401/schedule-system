@@ -30,6 +30,12 @@ public class Student {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "number_of_credits")
+    private Integer numberOfCredits;
+
+    @Column(name = "average")
+    private Double average;
+
     /**
      * Bidirectional relationship with {@link AcCySubjAssg}
      */
@@ -59,5 +65,29 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getNumberOfCredits() {
+        return numberOfCredits;
+    }
+
+    public void setNumberOfCredits(Integer numberOfCredits) {
+        this.numberOfCredits = numberOfCredits;
+    }
+
+    public Double getAverage() {
+        return average;
+    }
+
+    public void setAverage(Double average) {
+        this.average = average;
+    }
+
+    public List<AcCySubjAssg> getAcCySubjAssignments() {
+        return acCySubjAssignments;
+    }
+
+    public void setAcCySubjAssignments(List<AcCySubjAssg> acCySubjAssignments) {
+        this.acCySubjAssignments = acCySubjAssignments;
     }
 }

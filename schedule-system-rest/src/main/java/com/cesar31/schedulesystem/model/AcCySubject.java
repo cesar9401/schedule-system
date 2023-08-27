@@ -46,6 +46,9 @@ public class AcCySubject {
     @Column(name = "section_code")
     private String sectionCode;
 
+    @Column(name = "priority")
+    private Integer priority;
+
     /**
      * Bidirectional relationship with {@link AcCySubClassDay}
      */
@@ -97,6 +100,14 @@ public class AcCySubject {
 
     public void setSectionCode(String sectionCode) {
         this.sectionCode = sectionCode;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public List<AcCySubClassDay> getAcCySubClassDays() {

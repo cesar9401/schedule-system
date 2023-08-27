@@ -1,6 +1,7 @@
 package com.cesar31.schedulesystem.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,6 +36,9 @@ public class Subject {
 
     @Column(name = "required")
     private Boolean required;
+
+    @Column(name = "subject_index")
+    private Double subjectIndex;
 
     /**
      * Bidirectional relationship with {@link ProfessorSubject}
@@ -87,11 +91,27 @@ public class Subject {
         this.required = required;
     }
 
+    public Double getSubjectIndex() {
+        return subjectIndex;
+    }
+
+    public void setSubjectIndex(Double subjectIndex) {
+        this.subjectIndex = subjectIndex;
+    }
+
     public List<ProfessorSubject> getProfessorSubjects() {
         return professorSubjects;
     }
 
     public void setProfessorSubjects(List<ProfessorSubject> professorSubjects) {
         this.professorSubjects = professorSubjects;
+    }
+
+    public List<AcCySubject> getAcCySubjects() {
+        return acCySubjects;
+    }
+
+    public void setAcCySubjects(List<AcCySubject> acCySubjects) {
+        this.acCySubjects = acCySubjects;
     }
 }
