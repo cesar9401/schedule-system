@@ -13,10 +13,10 @@ ALTER TABLE subject_schedule DROP CONSTRAINT subject_schedule_pk;
 -- renaming subject_schedule to ac_cy_sched_subj
 EXEC sp_rename 'dbo.subject_schedule', 'ac_cy_sched_subj';
 EXEC sp_rename 'dbo.ac_cy_sched_subj.subject_schedule_id', 'ac_cy_sched_subj_id', 'COLUMN';
-EXEC sp_rename 'SEQ_SUBJECT_SCHEDULE', 'SEQ_AC_CY_SCHEDULE_SUBJ', 'SEQUENCE';
+EXEC sp_rename 'DBO.SEQ_SUBJECT_SCHEDULE', 'SEQ_AC_CY_SCHED_SUBJ';
 
 ALTER TABLE ac_cy_sched_subj ADD ac_cy_schedule_id BIGINT NOT NULL;
-ALTER TABLE ac_cy_sched_subj ADD CONSTRAINT ac_cy_sched_subj_pk PRIMARY KEY (ac_cy_sched_subj);
+ALTER TABLE ac_cy_sched_subj ADD CONSTRAINT ac_cy_sched_subj_pk PRIMARY KEY (ac_cy_sched_subj_id);
 
 ALTER TABLE ac_cy_sched_subj ADD CONSTRAINT ac_cy_schedule_ac_cy_sched_subj_fk
 FOREIGN KEY (ac_cy_schedule_id)
