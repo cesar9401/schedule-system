@@ -15,21 +15,29 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "subject_schedule")
-public class SubjectSchedule {
+@Table(name = "ac_cy_sched_subj")
+public class AcCySchedSubj {
 
     @Id
-    @SequenceGenerator(name = "subjectScheduleIdGenerator", sequenceName = "SEQ_SUBJECT_SCHEDULE", allocationSize = 1, initialValue = 10000)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subjectScheduleIdGenerator")
-    @Column(name = "subject_schedule_id")
-    private Long subjectScheduleId;
+    @SequenceGenerator(name = "acCySchedSubjIdGenerator", sequenceName = "SEQ_AC_CY_SCHED_SUBJ", allocationSize = 1, initialValue = 10000)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "acCySchedSubjIdGenerator")
+    @Column(name = "ac_cy_sched_subj_id")
+    private Long acCySchedSubjId;
+
+    /**
+     * Bidirectional relationship with {@link AcCySchedule}
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ac_cy_schedule_id")
+    @JsonBackReference(value = "acCySchedule")
+    private AcCySchedule acCySchedule;
 
     /**
      * Bidirectional relationship with {@link AcCySubject}
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ac_cy_subject_id")
-    @JsonBackReference(value = "acCySubject0")
+    @JsonBackReference(value = "acCySubject")
     private AcCySubject acCySubject;
 
     /**
@@ -52,12 +60,20 @@ public class SubjectSchedule {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    public Long getSubjectScheduleId() {
-        return subjectScheduleId;
+    public Long getAcCySchedSubjId() {
+        return acCySchedSubjId;
     }
 
-    public void setSubjectScheduleId(Long subjectScheduleId) {
-        this.subjectScheduleId = subjectScheduleId;
+    public void setAcCySchedSubjId(Long subjectScheduleId) {
+        this.acCySchedSubjId = subjectScheduleId;
+    }
+
+    public AcCySchedule getAcCySchedule() {
+        return acCySchedule;
+    }
+
+    public void setAcCySchedule(AcCySchedule acCySchedule) {
+        this.acCySchedule = acCySchedule;
     }
 
     public AcCySubject getAcCySubject() {

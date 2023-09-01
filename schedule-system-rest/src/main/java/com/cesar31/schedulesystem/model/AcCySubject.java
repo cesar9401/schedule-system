@@ -64,11 +64,11 @@ public class AcCySubject {
     private List<AcCySubjAssg> acCySubjAssignments;
 
     /**
-     * Bidirectional relationship with {@link SubjectSchedule}
+     * Bidirectional relationship with {@link AcCySchedSubj}
      */
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "acCySubject", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "acCySubject")
-    private List<SubjectSchedule> subjectSchedules;
+    private List<AcCySchedSubj> acCySchedSubjs;
 
     public Long getAcCySubjectId() {
         return acCySubjectId;
@@ -126,11 +126,11 @@ public class AcCySubject {
         this.acCySubjAssignments = acCySubjAssignments;
     }
 
-    public List<SubjectSchedule> getSubjectSchedules() {
-        return subjectSchedules;
+    public List<AcCySchedSubj> getSubjectSchedules() {
+        return acCySchedSubjs;
     }
 
-    public void setSubjectSchedules(List<SubjectSchedule> subjectSchedules) {
-        this.subjectSchedules = subjectSchedules;
+    public void setSubjectSchedules(List<AcCySchedSubj> acCySchedSubjs) {
+        this.acCySchedSubjs = acCySchedSubjs;
     }
 }
