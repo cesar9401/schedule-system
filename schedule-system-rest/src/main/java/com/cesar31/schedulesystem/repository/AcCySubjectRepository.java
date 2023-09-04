@@ -14,6 +14,8 @@ import java.util.List;
 @Repository(forEntity = AcCySubject.class)
 public abstract class AcCySubjectRepository extends AbstractEntityRepository<AcCySubject, Long> {
 
+    abstract List<AcCySubject> findByAcademicCycle_academicCycleId(Long academyCycleId);
+
     public List<AcCySubject> findAll(
             Long academicCycleId, Long subjectId, String section,
             Integer priority, Integer numberOfCredits, Boolean required,

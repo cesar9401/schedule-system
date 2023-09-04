@@ -4,9 +4,11 @@ import com.cesar31.schedulesystem.model.Category;
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
 
+import javax.enterprise.context.RequestScoped;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequestScoped
 @Repository(forEntity = Category.class)
 public abstract class CategoryRepository extends AbstractEntityRepository<Category, Long> {
 
