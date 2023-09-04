@@ -10,6 +10,7 @@ import com.cesar31.schedulesystem.model.Professor;
 import com.cesar31.schedulesystem.model.ProfessorContractDay;
 import com.cesar31.schedulesystem.model.ProfessorSubject;
 import com.cesar31.schedulesystem.model.QAcCySchedule;
+import com.cesar31.schedulesystem.model.Subject;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
@@ -69,6 +70,18 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
             query.where(_acCySchedule.isValid.eq(isValid));
 
         return query.fetch();
+    }
+
+    private List<AcCySubject> getAvailableAcCySubjects(List<AcCySubject> acCySubjects, List<AcCySchedSubj> schedSubjs) {
+        var subjMap = schedSubjs
+                .stream()
+                .collect(Collectors.groupingBy(sched -> sched.getAcCySubject().getAcCySubjectId(), Collectors.counting()));
+
+        // List of subjects of the ac cy that have less than the minimum number of periods required
+        return acCySubjects
+                .stream()
+                .filter(acCySubj -> subjMap.getOrDefault(acCySubj.getAcCySubjectId(), Long.MIN_VALUE) <= acCySubj.getNumberOfPeriods())
+                .collect(Collectors.toList());
     }
 
     private List<Classroom> getAvailableClassrooms(List<Classroom> classrooms, List<AcCySchedSubj> schedSubjs, Category day, LocalDateTime startTime, LocalDateTime endTime) {
