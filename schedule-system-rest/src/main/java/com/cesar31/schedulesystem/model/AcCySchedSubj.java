@@ -54,6 +54,10 @@ public class AcCySchedSubj {
     @JoinColumn(name = "classroom_id")
     private Classroom classroom;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cat_day")
+    private Category catDay;
+
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
@@ -98,6 +102,14 @@ public class AcCySchedSubj {
 
     public void setClassroom(Classroom classroom) {
         this.classroom = classroom;
+    }
+
+    public Category getCatDay() {
+        return catDay;
+    }
+
+    public void setCatDay(Category catDay) {
+        this.catDay = catDay;
     }
 
     public LocalDateTime getStartTime() {

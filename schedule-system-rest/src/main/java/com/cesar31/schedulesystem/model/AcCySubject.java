@@ -49,6 +49,9 @@ public class AcCySubject {
     @Column(name = "priority")
     private Integer priority;
 
+    @Column(name = "number_of_periods")
+    private Integer numberOfPeriods;
+
     /**
      * Bidirectional relationship with {@link AcCySubClassDay}
      */
@@ -110,6 +113,14 @@ public class AcCySubject {
         this.priority = priority;
     }
 
+    public Integer getNumberOfPeriods() {
+        return numberOfPeriods;
+    }
+
+    public void setNumberOfPeriods(Integer numberOfPeriods) {
+        this.numberOfPeriods = numberOfPeriods;
+    }
+
     public List<AcCySubClassDay> getAcCySubClassDays() {
         return acCySubClassDays;
     }
@@ -126,11 +137,11 @@ public class AcCySubject {
         this.acCySubjAssignments = acCySubjAssignments;
     }
 
-    public List<AcCySchedSubj> getSubjectSchedules() {
+    public List<AcCySchedSubj> getAcCySchedSubjs() {
         return acCySchedSubjs;
     }
 
-    public void setSubjectSchedules(List<AcCySchedSubj> acCySchedSubjs) {
+    public void setAcCySchedSubjs(List<AcCySchedSubj> acCySchedSubjs) {
         this.acCySchedSubjs = acCySchedSubjs;
     }
 }
