@@ -1,0 +1,1 @@
+ALTER TABLE dbo.professor ALTER COLUMN full_name VARCHAR(255) NOT NULL;
