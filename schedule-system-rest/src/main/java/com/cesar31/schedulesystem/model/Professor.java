@@ -121,4 +121,19 @@ public class Professor {
     public void setSubjectSchedules(List<AcCySchedSubj> acCySchedSubjs) {
         this.acCySchedSubjs = acCySchedSubjs;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Professor professor = (Professor) o;
+
+        return professorId.equals(professor.professorId);
+    }
+
+    @Override
+    public int hashCode() {
+        return professorId.hashCode();
+    }
 }
