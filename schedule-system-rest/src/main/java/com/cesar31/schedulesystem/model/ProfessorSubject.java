@@ -19,7 +19,7 @@ public class ProfessorSubject {
     @Id
     @SequenceGenerator(name = "professorSubjectIdGenerator", sequenceName = "SEQ_PROFESSOR_SUBJECT", allocationSize = 1, initialValue = 10000)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "professorSubjectIdGenerator")
-    @Column(name = "professor")
+    @Column(name = "professor_subject_id")
     private Long professorSubjectId;
 
     /**
