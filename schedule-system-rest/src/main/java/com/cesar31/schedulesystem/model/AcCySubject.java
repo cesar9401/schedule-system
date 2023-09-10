@@ -2,6 +2,7 @@ package com.cesar31.schedulesystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ac_cy_subject")
@@ -143,5 +145,26 @@ public class AcCySubject {
 
     public void setAcCySchedSubjs(List<AcCySchedSubj> acCySchedSubjs) {
         this.acCySchedSubjs = acCySchedSubjs;
+    }
+
+    @Override
+    public String toString() {
+        return "AcCySubject{" +
+                "subject=" + subject.getName() +
+                ", sectionCode='" + sectionCode + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AcCySubject that = (AcCySubject) o;
+        return Objects.equals(acCySubjectId, that.acCySubjectId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(acCySubjectId);
     }
 }

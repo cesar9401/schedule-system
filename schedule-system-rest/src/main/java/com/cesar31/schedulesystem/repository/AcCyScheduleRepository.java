@@ -48,6 +48,8 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
     @Inject
     Logger logger;
 
+    private final List<AcCySchedSubj> schedules = new ArrayList<>();
+
     public List<AcCySchedule> findAll(Long academicCycleId, Boolean isValid) {
         var qf = new JPAQueryFactory(this.entityManager());
         var _acCySchedule = new QAcCySchedule("_ac_cy_schedule");
@@ -61,6 +63,31 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
             query.where(_acCySchedule.isValid.eq(isValid));
 
         return query.fetch();
+    }
+
+    public AcCySchedule createSchedule(Long academicCycleId) throws ScheduleSysException {
+        var acCy = this.acCyRepository.findByIdOrLast(academicCycleId);
+        if (acCy == null)
+            throw new ScheduleSysException("academic_cycle_not_found")
+                    .status(Response.Status.NOT_FOUND);
+
+        var schedule = new AcCySchedule();
+        schedule.setAcademicCycle(acCy);
+
+        // create schedule details
+        var classDays = acCy.getClassDays();
+        var acCySchedSubjs = classDays
+                .stream()
+                .map(classDay -> {
+                    var acCySchedSubj = new AcCySchedSubj();
+                    acCySchedSubj.setCatDay(classDay.getCatDay());
+                    acCySchedSubj.setStartTime(classDay.getStartTime());
+                    acCySchedSubj.setEndTime(classDay.getEndTime());
+                    return acCySchedSubj;
+                })
+                .collect(Collectors.toList());
+        schedule.setAcCySchedSubjs(acCySchedSubjs);
+        return schedule;
     }
 
     public void createScheduleByAcCyId(Long academicCycleId) throws ScheduleSysException {
@@ -87,14 +114,43 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
     private Boolean createSchedule(List<AcCySchedSubj> schedule, List<AcCySubject> subjects, List<Classroom> classrooms, List<ProfessorSubject> professorSubjects) {
         var availableSubjects = this.getAvailableAcCySubjects(schedule, subjects);
         // TODO: set subject
-        for (var acCySubject : availableSubjects) {
 
+        var isSafe = false;
+        for (var schedSubj : schedule) {
+            if (schedSubj.getAcCySchedule() != null || schedSubj.getProfessor() != null) continue;
+
+            for (var acCySubject : availableSubjects) {
+                logger.info("Checking schedule for {}", acCySubject);
+                var availableProfessors = this.getAvailableProfessors(professorSubjects, schedule, acCySubject, schedSubj.getCatDay(), schedSubj.getStartTime(), schedSubj.getEndTime());
+                for (var professor : availableProfessors) {
+                    schedSubj.setAcCySubject(acCySubject);
+                    schedSubj.setProfessor(professor);
+
+                    isSafe = createSchedule(schedule, subjects, classrooms, professorSubjects) || isSafe;
+                }
+            }
         }
 
         // TODO: set classroom
         // TODO: set professor
 
         // TODO: next step, if fails,
+
+        return isSafe;
+    }
+
+    private Boolean testSubjectAndSchedule(List<AcCySchedSubj> schedSubjs, AcCySchedSubj schedSubj, AcCySubject acCySubject, Professor professor) {
+        var currentPeriods = schedSubjs
+                .stream()
+                .filter(ss -> ss.getAcCySubject() != null)
+                .filter(ss -> ss.getAcCySubject().equals(acCySubject))
+                .collect(Collectors.toList());
+
+        if (currentPeriods.size() >= acCySubject.getNumberOfPeriods()) {
+            return false;
+        }
+
+        // TODO: check if the professor is available at the current period
 
         return false;
     }
@@ -213,12 +269,13 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
     private List<AcCySubject> getAvailableAcCySubjects(List<AcCySchedSubj> schedSubjs, List<AcCySubject> acCySubjects) {
         var subjMap = schedSubjs
                 .stream()
+                .filter(schedSubj -> schedSubj.getAcCySubject() != null)
                 .collect(Collectors.groupingBy(sched -> sched.getAcCySubject().getAcCySubjectId(), Collectors.counting()));
 
         // List of subjects of the ac cy that have less than the minimum number of periods required
         return acCySubjects
                 .stream()
-                .filter(acCySubj -> subjMap.getOrDefault(acCySubj.getAcCySubjectId(), Long.MIN_VALUE) <= acCySubj.getNumberOfPeriods())
+                .filter(acCySubj -> subjMap.getOrDefault(acCySubj.getAcCySubjectId(), Long.MIN_VALUE) < acCySubj.getNumberOfPeriods())
                 .collect(Collectors.toList());
     }
 
@@ -247,11 +304,11 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
                 .collect(Collectors.toList());
     }
 
-    private List<Professor> getAvailableProfessors(List<ProfessorSubject> professorSubj, List<AcCySchedSubj> schedSubjs, AcCySubject subject, Category day, LocalDateTime startTime, LocalDateTime endTime) {
+    private List<Professor> getAvailableProfessors(List<ProfessorSubject> professorSubj, List<AcCySchedSubj> schedSubjs, AcCySubject acCySubject, Category day, LocalDateTime startTime, LocalDateTime endTime) {
         // teachers who teach the course and are contracted for the day and time requested
         var availableProfessors = professorSubj
                 .stream()
-                .filter(prof -> prof.getSubject().getSubjectId().equals(subject.getSubject().getSubjectId()))// give the course
+                .filter(prof -> prof.getSubject().getSubjectId().equals(acCySubject.getSubject().getSubjectId()))// give the course
                 .flatMap(prof -> prof.getProfessor().getContractDays().stream())
                 .filter(cd -> cd.getCatDay().is(day))
                 .filter(cd -> isBetween(cd.getStartTime(), cd.getEndTime(), startTime, endTime))
@@ -262,6 +319,7 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
         // all professors who have a class for the day and time requested
         var busyProfessors = schedSubjs
                 .stream()
+                .filter(sched -> sched.getProfessor() != null)
                 .filter(sched -> isSamePeriod(sched.getCatDay(), sched.getStartTime(), sched.getEndTime(), day, startTime, endTime))// non-free period
                 .mapToLong(sched -> sched.getProfessor().getProfessorId())
                 .boxed()

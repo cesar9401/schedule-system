@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,10 @@ public class AcCySchedule {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "acCySchedule", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "acCySchedule")
     private List<AcCySchedSubj> acCySchedSubjs;
+
+    public AcCySchedule() {
+        this.acCySchedSubjs = new ArrayList<>();
+    }
 
     public Long getAcCyScheduleId() {
         return acCyScheduleId;
