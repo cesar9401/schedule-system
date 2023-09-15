@@ -22,7 +22,7 @@ public class Professor {
     @Id
     @SequenceGenerator(name = "professorIdGenerator", sequenceName = "SEQ_PROFESSOR", allocationSize = 1, initialValue = 10000)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "professorIdGenerator")
-    @Column(name = "prefessor_id")
+    @Column(name = "professor_id")
     private Long professorId;
 
     @Column(name = "full_name")

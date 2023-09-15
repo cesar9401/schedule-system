@@ -29,7 +29,7 @@ public class ProfessorContractDay {
      */
     @JsonBackReference(value = "professor")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "professor")
+    @JoinColumn(name = "professor_id")
     private Professor professor;
 
     @ManyToOne(fetch = FetchType.EAGER)

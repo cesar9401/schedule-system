@@ -64,6 +64,18 @@ public class AcCySchedSubj {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    public AcCySchedSubj() {
+    }
+
+    public AcCySchedSubj(AcCySchedSubj other) {
+        this.acCySubject = other.acCySubject;
+        this.professor = other.professor;
+        this.classroom = other.classroom;
+        this.catDay = other.catDay;
+        this.startTime = other.startTime;
+        this.endTime = other.endTime;
+    }
+
     public Long getAcCySchedSubjId() {
         return acCySchedSubjId;
     }

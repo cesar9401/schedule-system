@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "ac_cy_schedule")
@@ -34,7 +35,18 @@ public class AcCySchedule {
     private List<AcCySchedSubj> acCySchedSubjs;
 
     public AcCySchedule() {
+        this.isValid = true;
         this.acCySchedSubjs = new ArrayList<>();
+    }
+
+    public AcCySchedule(AcCySchedule other) {
+        this.academicCycle = other.academicCycle;
+        this.isValid = other.isValid;
+        this.acCySchedSubjs = other
+                .acCySchedSubjs
+                .stream()
+                .map(AcCySchedSubj::new)
+                .collect(Collectors.toList());
     }
 
     public Long getAcCyScheduleId() {

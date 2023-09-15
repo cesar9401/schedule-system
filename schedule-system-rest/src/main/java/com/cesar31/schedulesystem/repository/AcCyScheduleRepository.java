@@ -11,7 +11,6 @@ import com.cesar31.schedulesystem.model.Professor;
 import com.cesar31.schedulesystem.model.ProfessorContractDay;
 import com.cesar31.schedulesystem.model.ProfessorSubject;
 import com.cesar31.schedulesystem.model.QAcCySchedule;
-import com.cesar31.schedulesystem.util.enums.CategoryEnum;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
@@ -48,7 +47,7 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
     @Inject
     Logger logger;
 
-    private final List<AcCySchedSubj> schedules = new ArrayList<>();
+    private final List<AcCySchedule> schedules = new ArrayList<>();
 
     public List<AcCySchedule> findAll(Long academicCycleId, Boolean isValid) {
         var qf = new JPAQueryFactory(this.entityManager());
@@ -102,41 +101,50 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
         var acCySubjects = acCySubjectRepository.findByAcademicCycle_academicCycleId(acCy.getAcademicCycleId());
         var professorSubjects = professorSubjectRepository.findAll();
 
-        var monday = categoryRepository.findByInternalId(CategoryEnum.DW_MONDAY.internalId);
-
-        // TODO: create schedules here
-        var availableClassrooms = this.getAvailableClassrooms(classrooms, new ArrayList<>(), monday, LocalDateTime.of(2000, 1, 1, 8, 0), LocalDateTime.of(2000, 1, 1, 0, 0));
-        availableClassrooms.forEach(c -> {
-            logger.info("{} -> {}", c.getClassroomId(), c.getName());
-        });
+        var schedule1 = this.createSchedule(academicCycleId);
+        var anySafe = this.createSchedule(schedule1.getAcCySchedSubjs(), acCySubjects, classrooms, professorSubjects);
+        logger.info("Any safe: {}", anySafe);
+        logger.info("Schedules generated: {}", schedules.size());
     }
 
-    private Boolean createSchedule(List<AcCySchedSubj> schedule, List<AcCySubject> subjects, List<Classroom> classrooms, List<ProfessorSubject> professorSubjects) {
-        var availableSubjects = this.getAvailableAcCySubjects(schedule, subjects);
+    private Boolean createSchedule(List<AcCySchedSubj> acCySchedSubjs, List<AcCySubject> subjects, List<Classroom> classrooms, List<ProfessorSubject> professorSubjects) {
+        var availableSubjects = this.getAvailableAcCySubjects(acCySchedSubjs, subjects);
         // TODO: set subject
 
         var isSafe = false;
-        for (var schedSubj : schedule) {
-            if (schedSubj.getAcCySchedule() != null || schedSubj.getProfessor() != null) continue;
+        var alwaysContinue = true;
+        for (var schedSubj : acCySchedSubjs) {
+            if (schedSubj.getAcCySchedule() != null || schedSubj.getProfessor() != null) {
+                continue;
+            }
 
+            alwaysContinue = false;
             for (var acCySubject : availableSubjects) {
                 logger.info("Checking schedule for {}", acCySubject);
-                var availableProfessors = this.getAvailableProfessors(professorSubjects, schedule, acCySubject, schedSubj.getCatDay(), schedSubj.getStartTime(), schedSubj.getEndTime());
+                var availableProfessors = this.getAvailableProfessors(professorSubjects, acCySchedSubjs, acCySubject, schedSubj.getCatDay(), schedSubj.getStartTime(), schedSubj.getEndTime());
                 for (var professor : availableProfessors) {
                     schedSubj.setAcCySubject(acCySubject);
                     schedSubj.setProfessor(professor);
 
-                    isSafe = createSchedule(schedule, subjects, classrooms, professorSubjects) || isSafe;
+                    isSafe = createSchedule(acCySchedSubjs, subjects, classrooms, professorSubjects) || isSafe;
+                    if (isSafe) break;
                 }
+                if (isSafe) break;
             }
+            if (isSafe) break;
         }
 
         // TODO: set classroom
         // TODO: set professor
-
         // TODO: next step, if fails,
 
-        return isSafe;
+        if (alwaysContinue || isSafe) {
+            var schedule = new AcCySchedule();
+            schedule.setAcCySchedSubjs(acCySchedSubjs);
+
+            this.schedules.add(schedule);
+        }
+        return alwaysContinue || isSafe;
     }
 
     private Boolean testSubjectAndSchedule(List<AcCySchedSubj> schedSubjs, AcCySchedSubj schedSubj, AcCySubject acCySubject, Professor professor) {
