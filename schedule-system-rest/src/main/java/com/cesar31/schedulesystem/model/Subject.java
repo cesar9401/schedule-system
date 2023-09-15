@@ -114,4 +114,19 @@ public class Subject {
     public void setAcCySubjects(List<AcCySubject> acCySubjects) {
         this.acCySubjects = acCySubjects;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Subject subject = (Subject) object;
+
+        return subjectId.equals(subject.subjectId);
+    }
+
+    @Override
+    public int hashCode() {
+        return subjectId.hashCode();
+    }
 }

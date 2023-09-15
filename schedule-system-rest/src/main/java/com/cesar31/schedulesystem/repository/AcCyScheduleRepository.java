@@ -22,8 +22,11 @@ import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RequestScoped
 @Repository(forEntity = AcCySchedule.class)
@@ -47,7 +50,8 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
     @Inject
     Logger logger;
 
-    private final List<AcCySchedule> schedules = new ArrayList<>();
+    public final static List<AcCySchedule> schedules = new ArrayList<>();
+    public final static Set<AcCySchedule> scheduleSet = new HashSet<>();
 
     public List<AcCySchedule> findAll(Long academicCycleId, Boolean isValid) {
         var qf = new JPAQueryFactory(this.entityManager());
@@ -70,6 +74,7 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
             throw new ScheduleSysException("academic_cycle_not_found")
                     .status(Response.Status.NOT_FOUND);
 
+        var classrooms = classroomRepository.findAll();
         var schedule = new AcCySchedule();
         schedule.setAcademicCycle(acCy);
 
@@ -77,12 +82,20 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
         var classDays = acCy.getClassDays();
         var acCySchedSubjs = classDays
                 .stream()
-                .map(classDay -> {
-                    var acCySchedSubj = new AcCySchedSubj();
-                    acCySchedSubj.setCatDay(classDay.getCatDay());
-                    acCySchedSubj.setStartTime(classDay.getStartTime());
-                    acCySchedSubj.setEndTime(classDay.getEndTime());
-                    return acCySchedSubj;
+                .flatMap(classDay -> {
+                    var startT = classDay.getStartTime().getHour();
+                    var endT = classDay.getEndTime().getHour();
+                    return classrooms
+                            .stream()
+                            .flatMap(classroom -> IntStream.range(0, endT - startT)
+                                    .mapToObj(i -> {
+                                        var acCySchedSubj = new AcCySchedSubj();
+                                        acCySchedSubj.setClassroom(classroom);
+                                        acCySchedSubj.setCatDay(classDay.getCatDay());
+                                        acCySchedSubj.setStartTime(classDay.getStartTime().plusHours(i));
+                                        acCySchedSubj.setEndTime(acCySchedSubj.getStartTime().plusHours(1));
+                                        return acCySchedSubj;
+                                    }));
                 })
                 .collect(Collectors.toList());
         schedule.setAcCySchedSubjs(acCySchedSubjs);
@@ -97,54 +110,120 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
 
         logger.info("Academic cycle: {}", acCy.getAcademicCycleId());
 
-        var classrooms = classroomRepository.findAll();
         var acCySubjects = acCySubjectRepository.findByAcademicCycle_academicCycleId(acCy.getAcademicCycleId());
         var professorSubjects = professorSubjectRepository.findAll();
 
+        scheduleSet.clear();
         var schedule1 = this.createSchedule(academicCycleId);
-        var anySafe = this.createSchedule(schedule1.getAcCySchedSubjs(), acCySubjects, classrooms, professorSubjects);
-        logger.info("Any safe: {}", anySafe);
-        logger.info("Schedules generated: {}", schedules.size());
+        logger.warn("total periods to fit: {}", schedule1.getAcCySchedSubjs().size());
+
+        var anyValid = this.createSchedule2(schedule1, acCySubjects, professorSubjects);
+        logger.info("Printing information (any valid: {})", anyValid);
+        logger.info("size: {}", scheduleSet.size());
+        /*
+        for (AcCySchedule acCySchedule : scheduleSet) {
+            printScheduleInfo(acCySchedule);
+        }
+        */
     }
 
-    private Boolean createSchedule(List<AcCySchedSubj> acCySchedSubjs, List<AcCySubject> subjects, List<Classroom> classrooms, List<ProfessorSubject> professorSubjects) {
-        var availableSubjects = this.getAvailableAcCySubjects(acCySchedSubjs, subjects);
-        // TODO: set subject
+    private void printScheduleInfo(AcCySchedule schedule) {
+        logger.warn("schedule info");
+        logger.info("Periods: {}", schedule.getAcCySchedSubjs().size());
 
-        var isSafe = false;
+        schedule.getAcCySchedSubjs()
+                .forEach(schedSubj -> {
+                    var professor = schedSubj.getProfessor();
+                    var subject = schedSubj.getAcCySubject();
+                    var classroom = schedSubj.getClassroom();
+                    var catDay = schedSubj.getCatDay();
+                    var startT = schedSubj.getStartTime();
+                    var endT = schedSubj.getEndTime();
+
+                    logger.info("classroom: {}, day: {}, start: {}, end: {}", classroom.getName(), catDay.getDescription(), startT.toString(), endT.toString());
+                    logger.info("subject: {}, professor: {}", subject != null ? subject.getSectionCode().concat(" ").concat(subject.getSubject().getName()) : "null", professor != null ? professor.getEmail() : "null");
+                });
+    }
+
+    private Boolean createSchedule2(AcCySchedule schedule, List<AcCySubject> subjects, List<ProfessorSubject> professorSubjects) {
+        logger.warn("new option!!!");
         var alwaysContinue = true;
-        for (var schedSubj : acCySchedSubjs) {
+        var isSafe = false;
+        for (var schedSubj : schedule.getAcCySchedSubjs()) {
             if (schedSubj.getAcCySchedule() != null || schedSubj.getProfessor() != null) {
                 continue;
             }
 
             alwaysContinue = false;
-            for (var acCySubject : availableSubjects) {
-                logger.info("Checking schedule for {}", acCySubject);
-                var availableProfessors = this.getAvailableProfessors(professorSubjects, acCySchedSubjs, acCySubject, schedSubj.getCatDay(), schedSubj.getStartTime(), schedSubj.getEndTime());
-                for (var professor : availableProfessors) {
-                    schedSubj.setAcCySubject(acCySubject);
+            for (var subject : subjects) {
+                // check if the subject has periods yet
+                if (!this.hasAvailablePeriods(schedule, subject)) {
+                    continue;
+                }
+
+                //  get available professors that teach the subject
+                var professors = professorSubjects
+                        .stream()
+                        .filter(professorSubject -> professorSubject.getSubject().equals(subject.getSubject()))
+                        .map(ProfessorSubject::getProfessor)
+                        .collect(Collectors.toList());
+
+                if (professors.isEmpty()) {
+                    return false;
+                }
+
+                for (var professor : professors) {
+                    // check if the professor is available here`
+                    if (!this.hasAvailablePeriods(schedule, subject) || !this.hasAvailablePeriods(schedule, schedSubj, professor))
+                        continue;
+
+                    //  create subject-professor-schedule here
+                    schedSubj.setAcCySubject(subject);
                     schedSubj.setProfessor(professor);
 
-                    isSafe = createSchedule(acCySchedSubjs, subjects, classrooms, professorSubjects) || isSafe;
-                    if (isSafe) break;
+                    //  create a copy of the schedule here
+                    var scheduleCopy = new AcCySchedule(schedule);
+                    isSafe = createSchedule2(scheduleCopy, subjects, professorSubjects) || isSafe;
+                    if (!isSafe) {
+                        logger.info("not safe!");
+                        return false;
+                    }
                 }
-                if (isSafe) break;
             }
-            if (isSafe) break;
         }
 
-        // TODO: set classroom
-        // TODO: set professor
-        // TODO: next step, if fails,
-
-        if (alwaysContinue || isSafe) {
-            var schedule = new AcCySchedule();
-            schedule.setAcCySchedSubjs(acCySchedSubjs);
-
-            this.schedules.add(schedule);
-        }
+        // if (alwaysContinue || isSafe) {
+        // logger.warn("always continue!");
+        scheduleSet.add(schedule);
+        // }
         return alwaysContinue || isSafe;
+    }
+
+    private Boolean hasAvailablePeriods(AcCySchedule schedule, AcCySubject acCySubject) {
+        return schedule
+                .getAcCySchedSubjs()
+                .stream()
+                .filter(schedSubj -> schedSubj.getAcCySubject() != null && schedSubj.getAcCySubject().equals(acCySubject))
+                .count() < acCySubject.getNumberOfPeriods();
+    }
+
+    private Boolean hasAvailablePeriods(AcCySchedule schedule, AcCySchedSubj acCySchedSubj, Professor professor) {
+        var isContracted = professor.getContractDays()
+                .stream()
+                .filter(contract -> contract.getCatDay().is(acCySchedSubj.getCatDay()))
+                .anyMatch(contract -> isBetween(contract.getStartTime(), contract.getEndTime(), acCySchedSubj.getStartTime(), acCySchedSubj.getEndTime()));
+
+        if (!isContracted) {
+            return false;
+        }
+
+        return schedule.getAcCySchedSubjs()
+                .stream()
+                .filter(schedSubj -> schedSubj.getProfessor() != null && schedSubj.getProfessor().equals(professor))
+                .noneMatch(schedSubj -> isSamePeriod(
+                        schedSubj.getCatDay(), schedSubj.getStartTime(), schedSubj.getEndTime(),
+                        acCySchedSubj.getCatDay(), acCySchedSubj.getStartTime(), acCySchedSubj.getEndTime()
+                ));
     }
 
     private Boolean testSubjectAndSchedule(List<AcCySchedSubj> schedSubjs, AcCySchedSubj schedSubj, AcCySubject acCySubject, Professor professor) {
