@@ -47,4 +47,19 @@ public class Classroom {
     public void setRecommendedCapacity(Integer recommendedCapacity) {
         this.recommendedCapacity = recommendedCapacity;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Classroom classroom = (Classroom) object;
+
+        return classroomId.equals(classroom.classroomId);
+    }
+
+    @Override
+    public int hashCode() {
+        return classroomId.hashCode();
+    }
 }

@@ -65,4 +65,19 @@ public class Category {
 
         return other.internalId.equals(internalId);
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Category category = (Category) object;
+
+        return internalId.equals(category.internalId);
+    }
+
+    @Override
+    public int hashCode() {
+        return internalId.hashCode();
+    }
 }

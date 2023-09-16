@@ -1,5 +1,7 @@
 package com.cesar31.schedulesystem.repository;
 
+import com.cesar31.schedulesystem.dto.AcCyScheduleAuxDto;
+import com.cesar31.schedulesystem.dto.PeriodDto;
 import com.cesar31.schedulesystem.exception.ScheduleSysException;
 import com.cesar31.schedulesystem.model.AcCySchedSubj;
 import com.cesar31.schedulesystem.model.AcCySchedule;
@@ -143,6 +145,84 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
                     logger.info("classroom: {}, day: {}, start: {}, end: {}", classroom.getName(), catDay.getDescription(), startT.toString(), endT.toString());
                     logger.info("subject: {}, professor: {}", subject != null ? subject.getSectionCode().concat(" ").concat(subject.getSubject().getName()) : "null", professor != null ? professor.getEmail() : "null");
                 });
+    }
+
+    private void printScheduleAuxInfo(AcCyScheduleAuxDto scheduleAux) {
+        if (scheduleAux.getChildren().isEmpty()) {
+            logger.info("schedule");
+            // printScheduleInfo(scheduleAux.getSchedule());
+        }
+
+        scheduleAux.getChildren().forEach(this::printScheduleAuxInfo);
+    }
+
+    public void createScheduleByAcCyId1(Long academicCycleId) throws ScheduleSysException {
+        var acCy = acCyRepository.findByIdOrLast(academicCycleId);
+
+        if (acCy == null)
+            throw new ScheduleSysException("academic_cycle_not_found")
+                    .status(Response.Status.NOT_FOUND);
+        var acCySubjects = acCySubjectRepository.findByAcademicCycle_academicCycleId(acCy.getAcademicCycleId());
+        var professorSubjects = professorSubjectRepository.findAll();
+        var schedule = this.createSchedule(academicCycleId);
+
+        var scheduleAux = new AcCyScheduleAuxDto(schedule, acCySubjects, professorSubjects);
+        var result = this.createSchedule3(scheduleAux);
+        logger.info("Success!!!");
+        this.printScheduleAuxInfo(scheduleAux);
+    }
+
+    private Boolean createSchedule3(AcCyScheduleAuxDto scheduleAux) {
+        var scheduleSubjects = scheduleAux.getAvailableSchedSubj();
+        var subjects = scheduleAux.getSubjects();
+
+        for (var scheduleSubj : scheduleSubjects) {
+            for (var subject: subjects) {
+                var subjectProfessorSet = scheduleAux.getSubjectProfessorMap().getOrDefault(subject.getSubject(), Set.of());
+
+                if (subjectProfessorSet.isEmpty()) {
+                    // TODO: remove subject
+                    logger.warn("No professor for subject: {}", subject.getSubject().getName());
+                    continue;
+                }
+
+                for (Professor professor : subjectProfessorSet) {
+                    var periodsSet = scheduleAux.getProfessorPeriodMap().getOrDefault(professor, Set.of());
+                    for (var period : periodsSet) {
+                        logger.info("values: {}", period);
+                    }
+
+                    var curPeriod = new PeriodDto(scheduleSubj.getCatDay(), scheduleSubj.getStartTime(), scheduleSubj.getEndTime());
+                    if (!periodsSet.contains(curPeriod)) {
+                        logger.warn("no period for professor: {}", professor.getEmail());
+                        continue;
+                    }
+
+                    scheduleSubj.setProfessor(professor);
+                    scheduleSubj.setAcCySubject(subject);
+
+                    // TODO: build new aux
+                    var newAux = new AcCyScheduleAuxDto(scheduleAux);
+                    // remove subject from available
+                    newAux.getSubjects().remove(subject);
+
+                    // remove professor period
+                    newAux.getProfessorPeriodMap().getOrDefault(professor, Set.of()).remove(curPeriod);
+
+                    // remove professor, if the professor don't have any period
+                    if (newAux.getProfessorPeriodMap().getOrDefault(professor, Set.of()).isEmpty()) {
+                        newAux.getProfessorPeriodMap().remove(professor);
+                    }
+
+                    scheduleSubj.setProfessor(null);
+                    scheduleSubj.setAcCySubject(null);
+                    scheduleAux.getChildren().add(newAux);
+                    var result = createSchedule3(newAux);
+                }
+            }
+        }
+
+        return false;
     }
 
     private Boolean createSchedule2(AcCySchedule schedule, List<AcCySubject> subjects, List<ProfessorSubject> professorSubjects) {
