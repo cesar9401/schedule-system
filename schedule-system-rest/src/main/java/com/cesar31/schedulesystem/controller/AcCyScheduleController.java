@@ -21,7 +21,7 @@ public class AcCyScheduleController {
 
     @GET
     public Response check() throws ScheduleSysException {
-        acCyScheduleRepository.createScheduleByAcCyId1(null);
+        acCyScheduleRepository.createScheduleByAcCyId(null);
         return Response.ok().build();
     }
 }

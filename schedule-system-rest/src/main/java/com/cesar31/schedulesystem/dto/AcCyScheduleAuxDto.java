@@ -4,7 +4,6 @@ import com.cesar31.schedulesystem.model.AcCySchedSubj;
 import com.cesar31.schedulesystem.model.AcCySchedule;
 import com.cesar31.schedulesystem.model.AcCySubject;
 import com.cesar31.schedulesystem.model.Professor;
-import com.cesar31.schedulesystem.model.ProfessorContractDay;
 import com.cesar31.schedulesystem.model.ProfessorSubject;
 import com.cesar31.schedulesystem.model.Subject;
 
@@ -43,7 +42,7 @@ public class AcCyScheduleAuxDto {
         this.subjects = subjects
                 .stream()
                 .flatMap(acCySubject -> IntStream
-                        .of(acCySubject.getNumberOfPeriods())
+                        .range(0, acCySubject.getNumberOfPeriods())
                         .mapToObj(i -> acCySubject)
                 )
                 .collect(Collectors.toList());

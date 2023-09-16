@@ -349,13 +349,13 @@
     <column id="COL93" populated="true" UUID="e5a3f025-fb68-4c60-bd70-2bcb870e39eb" autoIncrement="false" autoIncrementSequenceName="ac_cy_schedule_ac_cy_schedule_id_seq" defaultValue="0" name="ac_cy_schedule_id" nullable="0" physicalName="ac_cy_schedule_id" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
      <remarks></remarks>
     </column>
-    <column id="COL94" populated="true" UUID="3c923bef-aba3-4d40-a650-222f6c6fb1fa" autoIncrement="false" autoIncrementSequenceName="ac_cy_subject_ac_cy_subject_id_seq" defaultValue="" name="ac_cy_subject_id" nullable="0" physicalName="ac_cy_subject_id" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
+    <column id="COL94" populated="true" UUID="3c923bef-aba3-4d40-a650-222f6c6fb1fa" autoIncrement="false" autoIncrementSequenceName="ac_cy_subject_ac_cy_subject_id_seq" defaultValue="" name="ac_cy_subject_id" nullable="1" physicalName="ac_cy_subject_id" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
      <remarks></remarks>
     </column>
-    <column id="COL95" populated="true" UUID="6ebdac29-bc89-4bff-8bc2-21dbd1826e22" autoIncrement="false" autoIncrementSequenceName="professor_professor_id_seq" defaultValue="" name="professor_id" nullable="0" physicalName="professor_id" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
+    <column id="COL95" populated="true" UUID="6ebdac29-bc89-4bff-8bc2-21dbd1826e22" autoIncrement="false" autoIncrementSequenceName="professor_professor_id_seq" defaultValue="" name="professor_id" nullable="1" physicalName="professor_id" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
      <remarks></remarks>
     </column>
-    <column id="COL96" populated="true" UUID="c2d3e16d-0f53-4882-b6f0-9a92cb76da9c" autoIncrement="false" autoIncrementSequenceName="classroom_classroom_id_seq" defaultValue="" name="classroom_id" nullable="0" physicalName="classroom_id" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
+    <column id="COL96" populated="true" UUID="c2d3e16d-0f53-4882-b6f0-9a92cb76da9c" autoIncrement="false" autoIncrementSequenceName="classroom_classroom_id_seq" defaultValue="" name="classroom_id" nullable="1" physicalName="classroom_id" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
      <remarks></remarks>
     </column>
     <column id="COL97" populated="true" UUID="9f75b3c6-d992-4c67-b683-a72e1c31a1ce" autoIncrement="false" autoIncrementSequenceName="ac_cy_sched_subj_cat_day_seq" defaultValue="0" name="cat_day" nullable="0" physicalName="cat_day" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="-5" userDefinedTypeUUID="433cc8af-284d-4abb-8ef7-08ebcb34dbf1" >
