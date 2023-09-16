@@ -1,9 +1,11 @@
 package com.cesar31.schedulesystem.controller;
 
+import com.cesar31.schedulesystem.model.Classroom;
 import com.cesar31.schedulesystem.repository.ClassroomRepository;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
@@ -26,5 +28,11 @@ public class ClassroomController {
         return repository.findById(classroomId)
                 .map(classroom -> Response.ok(classroom).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
+    @POST
+    public Response create(Classroom classroom) {
+        repository.save(classroom);
+        return Response.ok().build();
     }
 }
