@@ -1,6 +1,9 @@
 package com.cesar31.schedulesystem.model;
 
+import com.cesar31.schedulesystem.util.TimeUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,15 +30,19 @@ public class Professor {
     @Column(name = "professor_id")
     private Long professorId;
 
+    @NotNull
     @Column(name = "full_name")
     private String fullName;
 
+    @NotNull
     @Column(name = "email")
     private String email;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TimeUtil.DATETIME_FORMAT)
     @Column(name = "date_of_hire")
     private LocalDateTime dateOfHire;
 
+    @NotNull
     @Column(name = "average_qualification")
     private Double averageQualification;
 
@@ -57,6 +66,26 @@ public class Professor {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "professor")
     private List<AcCySchedSubj> acCySchedSubjs;
+
+    public Professor() {
+        this.dateOfHire = LocalDateTime.now();
+        this.contractDays = new ArrayList<>();
+        this.professorSubjects = new ArrayList<>();
+        this.acCySchedSubjs = new ArrayList<>();
+    }
+
+    public void merge(Professor other) {
+        this.fullName = other.fullName;
+        this.email = other.email;
+        // this.dateOfHire = other.dateOfHire;
+        this.averageQualification = other.averageQualification;
+    }
+
+    public void clean() {
+        this.contractDays = new ArrayList<>();
+        this.professorSubjects = new ArrayList<>();
+        this.acCySchedSubjs = new ArrayList<>();
+    }
 
     public Long getProfessorId() {
         return professorId;

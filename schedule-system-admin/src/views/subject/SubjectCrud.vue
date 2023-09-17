@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue';
 import { HeaderEnum } from '@/model/HeaderEnum';
-import { Subject } from '@/model/schedule';
+import { Subject } from '@/model/schedule.model';
 import router from '@/router';
 import SubjectService from '@/services/SubjectService';
 import { onMounted, reactive } from 'vue';

@@ -1,4 +1,4 @@
-import type { Category } from '@/model/schedule';
+import type { Category } from '@/model/schedule.model';
 import { http } from '@/services/HttpClient';
 import type { AxiosResponse } from 'axios';
 

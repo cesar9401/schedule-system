@@ -20,3 +20,11 @@ export class Subject {
   required: boolean;
   subjectIndex!: number;
 }
+
+export class Professor {
+  professorId!: number;
+  fullName!: string;
+  email!: string;
+  dateOfHire!: string;
+  averageQualification!: number;
+}

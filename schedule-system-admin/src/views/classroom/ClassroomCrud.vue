@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue';
 import { HeaderEnum } from '@/model/HeaderEnum';
-import { Classroom } from '@/model/schedule';
+import { Classroom } from '@/model/schedule.model';
 import router from '@/router';
 import ClassroomService from '@/services/ClassroomService';
 import { onMounted, reactive } from 'vue';

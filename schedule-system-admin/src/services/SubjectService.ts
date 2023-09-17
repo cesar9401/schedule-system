@@ -1,4 +1,4 @@
-import type { Subject } from '@/model/schedule';
+import type { Subject } from '@/model/schedule.model';
 import { http } from '@/services/HttpClient';
 import type { AxiosResponse } from 'axios';
 

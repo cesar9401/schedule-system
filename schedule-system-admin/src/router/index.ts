@@ -46,6 +46,21 @@ const router = createRouter({
       path: '/subject/:id',
       name: 'edit-subject',
       component: () => import('../views/subject/SubjectCrud.vue')
+    },
+    {
+      path: '/professor',
+      name: 'all-professors',
+      component: () => import('../views/professor/ProfessorListView.vue')
+    },
+    {
+      path: '/professor/add',
+      name: 'add-professor',
+      component: () => import('../views/professor/ProfessorCrud.vue')
+    },
+    {
+      path: '/professor/:id',
+      name: 'edit-professor',
+      component: () => import('../views/professor/ProfessorCrud.vue')
     }
   ]
 })

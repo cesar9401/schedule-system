@@ -15,7 +15,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 
 @Path("subjects")
 @Produces(MediaType.APPLICATION_JSON)
@@ -28,11 +27,7 @@ public class SubjectController {
     @GET
     public Response findAll() {
         var subjects = repository.findAll();
-        subjects.forEach(s -> {
-            s.setAcCySubjects(new ArrayList<>());
-            s.setProfessorSubjects(new ArrayList<>());
-        });
-
+        subjects.forEach(Subject::clean);
         return Response.ok(subjects).build();
     }
 
@@ -43,9 +38,7 @@ public class SubjectController {
         if (subject == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        subject.setAcCySubjects(new ArrayList<>());
-        subject.setProfessorSubjects(new ArrayList<>());
+        subject.clean();
         return Response.ok(subject).build();
     }
 

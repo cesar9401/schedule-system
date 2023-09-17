@@ -2,7 +2,7 @@
 
 import Header from '@/components/Header.vue';
 import { HeaderEnum } from '@/model/HeaderEnum';
-import type { Subject } from '@/model/schedule';
+import type { Subject } from '@/model/schedule.model';
 import SubjectService from '@/services/SubjectService';
 import { onMounted, reactive, UnwrapNestedRefs } from 'vue';
 

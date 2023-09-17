@@ -13,14 +13,19 @@ const items: item[] = [
     icon: 'subject',
     path: '/subject'
   },
+  {
+    name: 'Docentes',
+    icon: 'groups',
+    path: '/professor'
+  }
 ]
 
 </script>
 <template>
   <div class="side-bar py-4 px-3">
     <ul class="p-0">
-      <li v-for="it of items" class="d-flex align-items-center gap-1 py-3 px-3 rounded-poll mb-2">
-        <router-link :to="it.path" class="d-flex align-items-center gap-1 py-3 px-3 rounded-poll mb-2">
+      <li v-for="it of items" class="d-flex align-items-center gap-1 rounded-poll mb-2">
+        <router-link :to="it.path" class="d-flex align-items-center gap-1 py-3 px-3 rounded-poll mb-2 w-100 h-100">
           <span class="material-symbols-outlined">{{ it.icon }}</span>
           <p class="mb-0">{{ it.name }}</p>
         </router-link>

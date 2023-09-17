@@ -73,6 +73,10 @@ public class Subject {
         this.subjectIndex = other.subjectIndex;
     }
 
+    public void clean() {
+        this.professorSubjects = new ArrayList<>();
+        this.acCySubjects = new ArrayList<>();
+    }
 
     public Long getSubjectId() {
         return subjectId;

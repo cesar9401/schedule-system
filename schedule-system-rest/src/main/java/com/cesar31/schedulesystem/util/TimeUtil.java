@@ -5,6 +5,8 @@ import java.time.LocalTime;
 
 public class TimeUtil {
 
+    public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     public static LocalTime toLocalTime(LocalDateTime dateTime) {
         return LocalTime.of(dateTime.getHour(), dateTime.getMinute());
     }
