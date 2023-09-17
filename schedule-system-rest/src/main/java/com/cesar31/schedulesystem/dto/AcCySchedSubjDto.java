@@ -19,6 +19,55 @@ public class AcCySchedSubjDto {
         this.period = new PeriodDto(entity.getCatDay(), entity.getStartTime(), entity.getEndTime());
     }
 
+
+    /**
+     * Art-1 - Artes
+     * Sección: A
+     * Docente: Luis Miguel
+     */
+    public String schedSubjNoClassroomStr() {
+        var builder = new StringBuilder();
+
+        if (acCySubject != null) {
+            builder.append(acCySubject.getSubject().getCode())
+                    .append(" - ")
+                    .append(acCySubject.getSubject().getName())
+                    .append("\n")
+                    .append("Sección: ")
+                    .append(acCySubject.getSectionCode())
+                    .append("\n");
+        }
+
+        if (professor != null) {
+            builder
+                    .append("Docente: ")
+                    .append(professor.getFullName());
+        }
+
+        return builder.toString();
+    }
+
+    public String schedSubjNoProfessor() {
+        var builder = new StringBuilder();
+
+        if (acCySubject != null) {
+            builder.append(acCySubject.getSubject().getCode())
+                    .append(" - ")
+                    .append(acCySubject.getSubject().getName())
+                    .append("\n")
+                    .append("Sección: ")
+                    .append(acCySubject.getSectionCode())
+                    .append("\n");
+        }
+
+        if (classroom != null) {
+            builder.append("Salón: ")
+                    .append(classroom.getName());
+        }
+
+        return builder.toString();
+    }
+
     public Classroom getClassroom() {
         return classroom;
     }

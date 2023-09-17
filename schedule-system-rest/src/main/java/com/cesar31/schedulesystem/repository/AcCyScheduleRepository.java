@@ -5,6 +5,8 @@ import com.cesar31.schedulesystem.dto.AcCyScheduleAuxDto;
 import com.cesar31.schedulesystem.dto.PeriodDto;
 import com.cesar31.schedulesystem.exception.ScheduleSysException;
 import com.cesar31.schedulesystem.export.DataColumn;
+import com.cesar31.schedulesystem.export.DataType;
+import com.cesar31.schedulesystem.export.ExcelFileExporter;
 import com.cesar31.schedulesystem.model.AcCySchedSubj;
 import com.cesar31.schedulesystem.model.AcCySchedule;
 import com.cesar31.schedulesystem.model.Professor;
@@ -13,11 +15,13 @@ import com.cesar31.schedulesystem.util.enums.CategoryEnum;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
+import org.apache.xmlbeans.ThreadLocalUtil;
 import org.slf4j.Logger;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,7 +74,7 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
 
         var schedSubjects = acCySchedule.getAcCySchedSubjs();
 
-        var catDays = categoryRepository.findByParentCategoryId(CategoryEnum.DAY_OF_WEEK.internalId);
+        var catDays = categoryRepository.findByParentInternalId(CategoryEnum.DAY_OF_WEEK.internalId);
 
         // periods grouping by day
         var periods = schedSubjects
@@ -86,11 +90,14 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
         var schedByClassrooms = schedSubjects
                 .stream()
                 .map(AcCySchedSubjDto::new)
-                .collect(Collectors.groupingBy(AcCySchedSubjDto::getClassroom, Collectors.groupingBy(AcCySchedSubjDto::getPeriod)));
+                .collect(Collectors.groupingBy(AcCySchedSubjDto::getClassroom, Collectors.groupingBy(AcCySchedSubjDto::getPeriod, Collectors.collectingAndThen(Collectors.toList(), list -> {
+                    if (list.size() != 1) {
+                        throw new IllegalStateException("repeated_period_for_classroom");
+                    }
+                    return list.get(0);
+                }))));
 
-        var fileData = new LinkedHashMap<DataColumn, List<?>>();
-
-        // TODO: get a list of the hours (just start and end time)
+        // get a list of the hours (just start and end time)
         var periodsInOneDay = new ArrayList<>(periods.
                 values()
                 .stream()
@@ -100,11 +107,47 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
                 .sorted()
                 .collect(Collectors.toList());
 
-        periodsInOneDay.forEach(period -> {
-            logger.info("period: {}", period);
-        });
+        var fileData = new LinkedHashMap<DataColumn, List<?>>();
 
-        return null;
+        // times
+        var periodsStr = periodsInOneDay
+                .stream()
+                .map(PeriodDto::getTimeStr)
+                .collect(Collectors.toList());
+        fileData.put(new DataColumn("Schedule/Classroom-Day", DataType.STRING), periodsStr);
+
+        // schedule for every classroom
+        for (var classroom : schedByClassrooms.keySet()) {
+            logger.info("Looking periods for classroom: {}", classroom.getName());
+            var periodsInClass = schedByClassrooms.get(classroom);
+
+            // for day
+            for (var day : catDays) {
+                logger.info("looking for day: {}", day.getDescription());
+                if (!periods.containsKey(day)) continue;
+                var periodsClassDayStr = periods.get(day)
+                        .stream()
+                        .sorted()
+                        .map(periodsInClass::get)
+                        .map(AcCySchedSubjDto::schedSubjNoClassroomStr)
+                        .collect(Collectors.toList());
+
+                if (!periodsClassDayStr.isEmpty()) {
+                    fileData.put(new DataColumn(classroom.getName().concat(" - ").concat(day.getDescription()), DataType.STRING), periodsClassDayStr);
+                }
+            }
+        }
+
+        try {
+            var xlsxFile = ExcelFileExporter
+                    .aExcelFileExporter(fileData)
+                    .export();
+
+            ThreadLocalUtil.clearAllThreadLocals();
+            return xlsxFile.toByteArray();
+        } catch (IOException e) {
+            throw new ScheduleSysException("error_exporting_to_xlsx");
+        }
     }
 
     public AcCySchedule createEmptySchedule(Long academicCycleId) throws ScheduleSysException {

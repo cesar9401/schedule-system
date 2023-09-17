@@ -30,6 +30,10 @@ public class PeriodDto implements Comparable<PeriodDto> {
         return endTime;
     }
 
+    public String getTimeStr() {
+        return startTime.toString().concat(" - ").concat(endTime.toString());
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

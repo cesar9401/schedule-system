@@ -48,6 +48,13 @@ final class ExcelExporter {
             for (int i = 0; i < headerKeys.size(); i++) {
                 sheet.autoSizeColumn(i);
             }
+
+            // text "\n"
+            for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
+                var row = sheet.getRow(i);
+                 row.setHeightInPoints(3  * sheet.getDefaultRowHeightInPoints());
+            }
+
             workbook.write(outputStream);
         }
 
