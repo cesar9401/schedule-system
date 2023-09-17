@@ -31,6 +31,21 @@ const router = createRouter({
       path: '/classroom/:id',
       name: 'edit-classroom',
       component: () => import('../views/classroom/ClassroomCrud.vue')
+    },
+    {
+      path: '/subject',
+      name: 'all-subjects',
+      component: () => import('../views/subject/SubjectListView.vue')
+    },
+    {
+      path: '/subject/add',
+      name: 'add-subject',
+      component: () => import('../views/subject/SubjectCrud.vue')
+    },
+    {
+      path: '/subject/:id',
+      name: 'edit-subject',
+      component: () => import('../views/subject/SubjectCrud.vue')
     }
   ]
 })

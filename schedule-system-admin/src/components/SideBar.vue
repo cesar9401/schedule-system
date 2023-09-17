@@ -85,7 +85,7 @@ const items: item[] = [
         cursor: pointer;
 
         span {
-          color: #1E8449 ;
+          color: #1E8449;
         }
 
         p {

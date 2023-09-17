@@ -12,7 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,18 +29,24 @@ public class Subject {
     private Long subjectId;
 
     @Column(name = "code")
+    @NotNull
     private String code;
 
     @Column(name = "name")
+    @NotNull
     private String name;
 
     @Column(name = "number_of_credits")
+    @NotNull
+    @PositiveOrZero
     private Integer numberOfCredits;
 
     @Column(name = "required")
+    @NotNull
     private Boolean required;
 
     @Column(name = "subject_index")
+    @NotNull
     private Double subjectIndex;
 
     /**
@@ -50,6 +59,20 @@ public class Subject {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "subject")
     private List<AcCySubject> acCySubjects;
+
+    public Subject() {
+        this.professorSubjects = new ArrayList<>();
+        this.acCySubjects = new ArrayList<>();
+    }
+
+    public void merge(Subject other) {
+        this.code = other.code;
+        this.name = other.name;
+        this.numberOfCredits = other.numberOfCredits;
+        this.required = other.required;
+        this.subjectIndex = other.subjectIndex;
+    }
+
 
     public Long getSubjectId() {
         return subjectId;
