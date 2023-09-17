@@ -1,4 +1,11 @@
 
+export class Category {
+  categoryId!: number;
+  parentCategoryId!: number;
+  internalId!: number;
+  description!: string;
+}
+
 export class Classroom {
   classroomId!: number;
   name!: string;
