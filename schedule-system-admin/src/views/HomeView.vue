@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
 
-console.log(import.meta.env.VITE_SCHEDULE_SYSTEM_REST_URL);
+import { environment } from '@/config/environment';
 
+console.log(`back: ${environment.SCHEDULE_REST_URL}`);
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
 </template>

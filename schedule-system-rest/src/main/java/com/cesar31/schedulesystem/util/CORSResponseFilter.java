@@ -26,8 +26,6 @@ public class CORSResponseFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        logger.info("Filtering...");
-
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
         // Authorize (allow) all domains to consume the content

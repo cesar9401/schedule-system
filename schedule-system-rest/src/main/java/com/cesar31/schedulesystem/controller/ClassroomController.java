@@ -4,6 +4,7 @@ import com.cesar31.schedulesystem.model.Classroom;
 import com.cesar31.schedulesystem.repository.ClassroomRepository;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -31,7 +32,7 @@ public class ClassroomController {
     }
 
     @POST
-    public Response create(Classroom classroom) {
+    public Response create(@Valid Classroom classroom) {
         repository.save(classroom);
         return Response.ok().build();
     }
