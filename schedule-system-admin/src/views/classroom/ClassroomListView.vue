@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SideBar from '@/components/SideBar.vue';
 import type { Classroom } from '@/model/schedule';
 import router from '@/router';
 import ClassroomService from '@/services/ClassroomService';
@@ -21,6 +22,7 @@ onMounted(() => {
 
 </script>
 <template>
+
   <div class="container">
     <div class="my-5">
       <h1 class="text-success text-center">Salones</h1>
