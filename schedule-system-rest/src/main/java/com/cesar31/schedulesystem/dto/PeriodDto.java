@@ -6,7 +6,7 @@ import com.cesar31.schedulesystem.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class PeriodDto {
+public class PeriodDto implements Comparable<PeriodDto> {
 
     private final Category catDay;
     private final LocalTime startTime;
@@ -57,5 +57,13 @@ public class PeriodDto {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 '}';
+    }
+
+    @Override
+    public int compareTo(PeriodDto o) {
+        if (!this.catDay.is(o.catDay))
+            return this.catDay.getInternalId().compareTo(o.catDay.getInternalId());
+
+        return this.startTime.compareTo(o.startTime);
     }
 }

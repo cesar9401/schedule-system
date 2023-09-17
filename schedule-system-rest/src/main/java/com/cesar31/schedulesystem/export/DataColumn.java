@@ -1,6 +1,6 @@
 package com.cesar31.schedulesystem.export;
 
-class DataColumn {
+public class DataColumn {
 
     private final String name;
     private final DataType dataType;

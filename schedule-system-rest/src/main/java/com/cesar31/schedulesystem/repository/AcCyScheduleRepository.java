@@ -1,12 +1,15 @@
 package com.cesar31.schedulesystem.repository;
 
+import com.cesar31.schedulesystem.dto.AcCySchedSubjDto;
 import com.cesar31.schedulesystem.dto.AcCyScheduleAuxDto;
 import com.cesar31.schedulesystem.dto.PeriodDto;
 import com.cesar31.schedulesystem.exception.ScheduleSysException;
+import com.cesar31.schedulesystem.export.DataColumn;
 import com.cesar31.schedulesystem.model.AcCySchedSubj;
 import com.cesar31.schedulesystem.model.AcCySchedule;
 import com.cesar31.schedulesystem.model.Professor;
 import com.cesar31.schedulesystem.model.QAcCySchedule;
+import com.cesar31.schedulesystem.util.enums.CategoryEnum;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
@@ -16,6 +19,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,6 +42,9 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
     ProfessorSubjectRepository professorSubjectRepository;
 
     @Inject
+    CategoryRepository categoryRepository;
+
+    @Inject
     Logger logger;
 
     public List<AcCySchedule> findAll(Long academicCycleId, Boolean isValid) {
@@ -55,8 +62,53 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
         return query.fetch();
     }
 
+    public byte[] exportById(Long acCyScheduleId) throws ScheduleSysException {
+        var acCySchedule = this.findBy(acCyScheduleId);
+        if (acCySchedule == null)
+            throw new ScheduleSysException("schedule_not_found")
+                    .status(Response.Status.NOT_FOUND);
+
+        var schedSubjects = acCySchedule.getAcCySchedSubjs();
+
+        var catDays = categoryRepository.findByParentCategoryId(CategoryEnum.DAY_OF_WEEK.internalId);
+
+        // periods grouping by day
+        var periods = schedSubjects
+                .stream()
+                .map(sched -> new PeriodDto(sched.getCatDay(), sched.getStartTime(), sched.getEndTime()))
+                .collect(Collectors.groupingBy(PeriodDto::getCatDay, Collectors.toSet()));
+
+        periods.forEach((day, period) -> {
+            logger.info("day: {}, period: {}", day.getDescription(), period);
+        });
+
+        // group by classroom and periods
+        var schedByClassrooms = schedSubjects
+                .stream()
+                .map(AcCySchedSubjDto::new)
+                .collect(Collectors.groupingBy(AcCySchedSubjDto::getClassroom, Collectors.groupingBy(AcCySchedSubjDto::getPeriod)));
+
+        var fileData = new LinkedHashMap<DataColumn, List<?>>();
+
+        // TODO: get a list of the hours (just start and end time)
+        var periodsInOneDay = new ArrayList<>(periods.
+                values()
+                .stream()
+                .findFirst()
+                .orElse(Set.of()))
+                .stream()
+                .sorted()
+                .collect(Collectors.toList());
+
+        periodsInOneDay.forEach(period -> {
+            logger.info("period: {}", period);
+        });
+
+        return null;
+    }
+
     public AcCySchedule createEmptySchedule(Long academicCycleId) throws ScheduleSysException {
-        var acCy = this.acCyRepository.findByIdOrLast(academicCycleId);
+        var acCy = acCyRepository.findByIdOrLast(academicCycleId);
         if (acCy == null)
             throw new ScheduleSysException("academic_cycle_not_found")
                     .status(Response.Status.NOT_FOUND);
