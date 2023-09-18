@@ -1,5 +1,6 @@
 
 export enum HeaderEnum {
   HEADER_LIST_VIEW,
-  HEADER_CRUD
+  HEADER_CRUD,
+  HEADER_LIST_VIEW_AND_CRUD
 }

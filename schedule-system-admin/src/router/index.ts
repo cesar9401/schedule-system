@@ -71,10 +71,21 @@ const router = createRouter({
       path: '/academic-cycle/add',
       name: 'add-academic-cycle',
       component: () => import('../views/academic-cycle/AcademicCycleCrud.vue')
-    },    {
+    },
+    {
       path: '/academic-cycle/:id',
       name: 'edit-academic-cycle',
       component: () => import('../views/academic-cycle/AcademicCycleCrud.vue')
+    },
+    {
+      path: '/academic-cycle/:academicCycleId/model',
+      name: 'all-ac-cy-models',
+      component: () => import('../views/academic-cycle/ac-cy-schedule-model/AcCyScheduleModelListView.vue')
+    },
+    {
+      path: '/academic-cycle/:academicCycleId/model/add',
+      name: 'all-ac-cy-model-add',
+      component: () => import('../views/academic-cycle/ac-cy-schedule-model/AcCyScheduleModelCrud.vue')
     }
   ]
 })

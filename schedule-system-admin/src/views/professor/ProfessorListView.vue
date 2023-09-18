@@ -25,7 +25,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="container">
-    <Header to="/professor/add" :type-header="HeaderEnum.HEADER_LIST_VIEW" />
+    <Header crud-to="/professor/add" :type-header="HeaderEnum.HEADER_LIST_VIEW" />
     <div class="my-5">
       <h1 class="text-success text-center">Docentes</h1>
     </div>

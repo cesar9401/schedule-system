@@ -5,24 +5,24 @@ import { HeaderEnum } from '@/model/HeaderEnum';
 const props = defineProps({
   to: String,
   title: String,
+  crudTo: String,
   typeHeader: HeaderEnum
 });
 
 </script>
 <template>
-  <div class="mt-4" v-if="props">
-    <div v-if="typeHeader == HeaderEnum.HEADER_CRUD">
-      <router-link :to='to' class="text-decoration-none d-flex justify-content-start align-items-center gap-2">
+  <div v-if="props" class="mt-4 d-flex align-items-top">
+    <div v-if="typeHeader == HeaderEnum.HEADER_CRUD || typeHeader == HeaderEnum.HEADER_LIST_VIEW_AND_CRUD">
+      <router-link :to='to' class="text-decoration-none d-flex justify-content-start align-items-center gap-2 ">
         <span class="material-symbols-outlined">arrow_back</span>
         <h1 class="m-0 p-0 h5">{{ title }}</h1>
       </router-link>
     </div>
-    <div v-else-if="typeHeader == HeaderEnum.HEADER_LIST_VIEW" class="mt-4 d-flex justify-content-end align-items-center">
-      <router-link :to="to" class="btn btn-success d-flex justify-content-center align-items-center gap-1 col-2">
+    <div v-if="typeHeader == HeaderEnum.HEADER_LIST_VIEW || typeHeader == HeaderEnum.HEADER_LIST_VIEW_AND_CRUD" class="d-flex justify-content-end align-items-center ms-auto">
+      <router-link :to="crudTo" class="btn btn-success d-flex justify-content-center align-items-center gap-1">
         <span class="material-symbols-outlined">add</span>
-        {{ title || 'Agregar' }}
+        Agregar
       </router-link>
     </div>
-    <div v-else>Error!</div>
   </div>
 </template>

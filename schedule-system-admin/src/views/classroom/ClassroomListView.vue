@@ -26,7 +26,7 @@ onMounted(() => {
 
   <div class="container">
 
-    <Header to="/classroom/add" :type-header="HeaderEnum.HEADER_LIST_VIEW"></Header>
+    <Header crud-to="/classroom/add" :type-header="HeaderEnum.HEADER_LIST_VIEW"></Header>
 
     <div class="my-5">
       <h1 class="text-success text-center">Salones</h1>

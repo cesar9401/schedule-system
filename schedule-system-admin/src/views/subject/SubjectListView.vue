@@ -20,7 +20,7 @@ onMounted(() => {
 
 <template>
   <div class="container">
-    <Header to='/subject/add' :type-header="HeaderEnum.HEADER_LIST_VIEW"></Header>
+    <Header crud-to='/subject/add' :type-header="HeaderEnum.HEADER_LIST_VIEW"></Header>
 
     <div class="my-5">
       <h1 class="text-success text-center">Cursos</h1>

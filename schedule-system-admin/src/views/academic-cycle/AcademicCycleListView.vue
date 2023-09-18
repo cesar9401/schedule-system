@@ -23,7 +23,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="container">
-    <Header to="/academic-cycle/add" :type-header="HeaderEnum.HEADER_LIST_VIEW"/>
+    <Header crud-to="/academic-cycle/add" :type-header="HeaderEnum.HEADER_LIST_VIEW"/>
     <div class="my-5">
       <h1 class="text-success text-center">Ciclos academicos</h1>
     </div>
@@ -41,9 +41,12 @@ onMounted(() => {
             <td>{{ ac.name }}</td>
             <td>{{ ac.description }}</td>
             <td>
-              <div class="d-inline-flex justify-content-end align-items-center">
+              <div class="d-inline-flex justify-content-end align-items-center gap-1">
                 <router-link :to="'/academic-cycle/' + ac.academicCycleId" class="btn btn-sm btn-outline-success">
                   <span class="material-symbols-outlined">edit</span>
+                </router-link>
+                <router-link :to="'/academic-cycle/' + ac.academicCycleId + '/model'" class="btn btn-sm btn-outline-success">
+                  <span class="material-symbols-outlined">table_chart_view</span>
                 </router-link>
               </div>
             </td>
