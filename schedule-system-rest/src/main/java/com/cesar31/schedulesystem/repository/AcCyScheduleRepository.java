@@ -1,6 +1,7 @@
 package com.cesar31.schedulesystem.repository;
 
 import com.cesar31.schedulesystem.dto.AcCySchedSubjDto;
+import com.cesar31.schedulesystem.dto.AcCyScheduleDto;
 import com.cesar31.schedulesystem.dto.PeriodDto;
 import com.cesar31.schedulesystem.exception.ScheduleSysException;
 import com.cesar31.schedulesystem.export.DataColumn;
@@ -33,6 +34,8 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
     @Inject
     Logger logger;
 
+    abstract List<AcCySchedule> findByAcCyScheduleModel_acCyScheduleModelId(Long acCyScheduleModelId);
+
     public byte[] exportById(Long acCyScheduleId) throws ScheduleSysException {
         var acCySchedule = this.findBy(acCyScheduleId);
         if (acCySchedule == null)
@@ -48,10 +51,6 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
                 .stream()
                 .map(sched -> new PeriodDto(sched.getCatDay(), sched.getStartTime(), sched.getEndTime()))
                 .collect(Collectors.groupingBy(PeriodDto::getCatDay, Collectors.toSet()));
-
-        periods.forEach((day, period) -> {
-            logger.info("day: {}, period: {}", day.getDescription(), period);
-        });
 
         // group by classroom and periods
         var schedByClassrooms = schedSubjects
@@ -85,12 +84,10 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
 
         // schedule for every classroom
         for (var classroom : schedByClassrooms.keySet()) {
-            logger.info("Looking periods for classroom: {}", classroom.getName());
             var periodsInClass = schedByClassrooms.get(classroom);
 
             // for day
             for (var day : catDays) {
-                logger.info("looking for day: {}", day.getDescription());
                 if (!periods.containsKey(day)) continue;
                 var periodsClassDayStr = periods.get(day)
                         .stream()
@@ -111,9 +108,17 @@ public abstract class AcCyScheduleRepository extends AbstractEntityRepository<Ac
                     .export();
 
             ThreadLocalUtil.clearAllThreadLocals();
+            logger.info("Exporting...");
             return xlsxFile.toByteArray();
         } catch (IOException e) {
             throw new ScheduleSysException("error_exporting_to_xlsx");
         }
+    }
+
+    public List<AcCyScheduleDto> findAllByAcCyScheduleModelId(Long acCyScheduleModelId) {
+        return this.findByAcCyScheduleModel_acCyScheduleModelId(acCyScheduleModelId)
+                .stream()
+                .map(AcCyScheduleDto::new)
+                .collect(Collectors.toList());
     }
 }

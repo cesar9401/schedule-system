@@ -40,6 +40,12 @@ public class AcCySchedule {
     @Column(name = "is_valid")
     private Boolean isValid;
 
+    @Column(name = "total_number_of_periods")
+    private Long totalNumberOfPeriods;
+
+    @Column(name = "total_covered_periods")
+    private Long totalCoveredPeriods;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "acCySchedule", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "acCySchedule")
     private List<AcCySchedSubj> acCySchedSubjs;
@@ -81,6 +87,22 @@ public class AcCySchedule {
 
     public void setValid(Boolean valid) {
         isValid = valid;
+    }
+
+    public Long getTotalNumberOfPeriods() {
+        return totalNumberOfPeriods;
+    }
+
+    public void setTotalNumberOfPeriods(Long totalNumberOfPeriods) {
+        this.totalNumberOfPeriods = totalNumberOfPeriods;
+    }
+
+    public Long getTotalCoveredPeriods() {
+        return totalCoveredPeriods;
+    }
+
+    public void setTotalCoveredPeriods(Long totalCoveredPeriods) {
+        this.totalCoveredPeriods = totalCoveredPeriods;
     }
 
     public List<AcCySchedSubj> getAcCySchedSubjs() {

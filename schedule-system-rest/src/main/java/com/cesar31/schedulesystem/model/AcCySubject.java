@@ -158,15 +158,17 @@ public class AcCySubject {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AcCySubject that = (AcCySubject) o;
-        return Objects.equals(acCySubjectId, that.acCySubjectId);
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        AcCySubject subject = (AcCySubject) object;
+
+        return acCySubjectId.equals(subject.acCySubjectId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(acCySubjectId);
+        return acCySubjectId.hashCode();
     }
 }

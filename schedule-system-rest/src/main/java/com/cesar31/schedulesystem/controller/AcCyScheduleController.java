@@ -21,6 +21,12 @@ public class AcCyScheduleController {
     AcCyScheduleRepository acCyScheduleRepository;
 
     @GET
+    @Path("by-schedule-model/{acCyScheduleModelId}")
+    public Response findByAcCyScheduleModelId(@PathParam("acCyScheduleModelId") Long acCyScheduleModelId) {
+        return Response.ok(acCyScheduleRepository.findAllByAcCyScheduleModelId(acCyScheduleModelId)).build();
+    }
+
+    @GET
     @Path("export/{acCyScheduleId}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response export(@PathParam("acCyScheduleId") Long acCyScheduleId) throws ScheduleSysException {

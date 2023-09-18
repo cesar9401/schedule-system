@@ -1,0 +1,2 @@
+ALTER TABLE ac_cy_schedule ADD total_number_of_periods BIGINT CONSTRAINT ac_cy_schedule_total_number_of_periods_default DEFAULT 0 NOT NULL;
+ALTER TABLE ac_cy_schedule ADD total_covered_periods BIGINT CONSTRAINT ac_cy_schedule_total_covered_periods_default DEFAULT 0 NOT NULL;

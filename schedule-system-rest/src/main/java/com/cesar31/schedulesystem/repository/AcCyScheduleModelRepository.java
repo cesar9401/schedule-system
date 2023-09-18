@@ -1,12 +1,16 @@
 package com.cesar31.schedulesystem.repository;
 
 import com.cesar31.schedulesystem.dto.AcCyScheduleAuxDto;
+import com.cesar31.schedulesystem.dto.AcCyScheduleModelDto;
 import com.cesar31.schedulesystem.dto.PeriodDto;
 import com.cesar31.schedulesystem.exception.ScheduleSysException;
 import com.cesar31.schedulesystem.model.AcCySchedSubj;
 import com.cesar31.schedulesystem.model.AcCySchedule;
 import com.cesar31.schedulesystem.model.AcCyScheduleModel;
+import com.cesar31.schedulesystem.model.AcCySubject;
 import com.cesar31.schedulesystem.model.Professor;
+import com.cesar31.schedulesystem.util.comparator.AcCySubjectComparator;
+import com.cesar31.schedulesystem.util.enums.CategoryEnum;
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
 import org.slf4j.Logger;
@@ -15,7 +19,10 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -41,7 +48,14 @@ public abstract class AcCyScheduleModelRepository extends AbstractEntityReposito
 
     public abstract List<AcCyScheduleModel> findByAcademicCycle_academicCycleId(Long academicCycleId);
 
-    public void startModel(Long academicCycleId, AcCyScheduleModel scheduleModel) throws ScheduleSysException {
+    public List<AcCyScheduleModelDto> findAllDtoByAcademicCycleId(Long academicCycleId) {
+        return this.findByAcademicCycle_academicCycleId(academicCycleId)
+                .stream()
+                .map(AcCyScheduleModelDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public void startModel(Long academicCycleId, Long subjectOrderIntId, AcCyScheduleModel scheduleModel) throws ScheduleSysException {
         var acCy = acCyRepository.findBy(academicCycleId);
         if (acCy == null)
             throw new ScheduleSysException("academic_cycle_not_found")
@@ -52,6 +66,27 @@ public abstract class AcCyScheduleModelRepository extends AbstractEntityReposito
         var schedule = this.createEmptySchedule(academicCycleId);
 
         var scheduleAux = new AcCyScheduleAuxDto(schedule, acCySubjects, professorSubjects);
+
+        // subjects order
+        if (subjectOrderIntId != null) {
+            var subjectOrder = this.getOrder(subjectOrderIntId);
+            if (subjectOrder.isEmpty()) {
+                throw new ScheduleSysException("invalid_subject_order");
+            }
+
+            logger.info("Order subject by: {}", subjectOrder.get().name());
+            if (CategoryEnum.SO_SHUFFLE.equals(subjectOrder.get())) {
+                Collections.shuffle(scheduleAux.getSubjects());
+            } else {
+                var comparator = new AcCySubjectComparator(subjectOrder.get());
+                var orderAcCySubjects = scheduleAux.getSubjects()
+                        .stream()
+                        .sorted(comparator)
+                        .collect(Collectors.toList());
+                scheduleAux.setSubjects(orderAcCySubjects);
+            }
+        }
+
         var schedulesAUx = this.createSchedule(scheduleAux);
 
         var schedules = schedulesAUx
@@ -60,6 +95,21 @@ public abstract class AcCyScheduleModelRepository extends AbstractEntityReposito
                     var acCySchedule = sched.getSchedule();
                     acCySchedule.getAcCySchedSubjs().forEach(schedSubj -> schedSubj.setAcCySchedule(acCySchedule));
                     acCySchedule.setAcCyScheduleModel(scheduleModel);
+
+                    var totalPeriods = acCy
+                            .getAcCySubjects()
+                            .stream()
+                            .mapToLong(AcCySubject::getNumberOfPeriods)
+                            .sum();
+
+                    var totalCovered = acCySchedule
+                            .getAcCySchedSubjs()
+                            .stream()
+                            .filter(schedSubj -> schedSubj.getProfessor() != null && schedSubj.getAcCySubject() != null)
+                            .count();
+
+                    acCySchedule.setTotalNumberOfPeriods(totalPeriods);
+                    acCySchedule.setTotalCoveredPeriods(totalCovered);
                     return acCySchedule;
                 })
                 .collect(Collectors.toList());
@@ -138,7 +188,7 @@ public abstract class AcCyScheduleModelRepository extends AbstractEntityReposito
                     // remove professor period
                     newAux.getProfessorPeriodMap().getOrDefault(professor, Set.of()).remove(curPeriod);
 
-                    // remove professor, if the professor don't have any period
+                    // remove professor, if the professor doesn't have any period
                     if (newAux.getProfessorPeriodMap().getOrDefault(professor, Set.of()).isEmpty()) {
                         newAux.getProfessorPeriodMap().remove(professor);
                     }
@@ -156,5 +206,11 @@ public abstract class AcCyScheduleModelRepository extends AbstractEntityReposito
             schedules.add(scheduleAux);
         }
         return schedules;
+    }
+
+    private Optional<CategoryEnum> getOrder(Long categoryInternalId) {
+        return Arrays.stream(CategoryEnum.values())
+                .filter(cat -> cat.internalId.equals(categoryInternalId))
+                .findFirst();
     }
 }

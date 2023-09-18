@@ -84,8 +84,13 @@ const router = createRouter({
     },
     {
       path: '/academic-cycle/:academicCycleId/model/add',
-      name: 'all-ac-cy-model-add',
+      name: 'ac-cy-model-add',
       component: () => import('../views/academic-cycle/ac-cy-schedule-model/AcCyScheduleModelCrud.vue')
+    },
+    {
+      path: '/academic-cycle/:academicCycleId/model/:acCyScheduleModelId',
+      name: 'all-ac-cy-schedules',
+      component: () => import('../views/academic-cycle/ac-cy-schedule-model/ac-cy-schedule/AcCyScheduleListView.vue')
     }
   ]
 })

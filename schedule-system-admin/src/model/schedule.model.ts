@@ -1,4 +1,3 @@
-
 export class Category {
   categoryId!: number;
   parentCategoryId!: number;
@@ -91,4 +90,19 @@ export class AcCyScheduleModel {
   responsibleUser!: string;
   description!: string;
   entryDate!: string;
+}
+
+export class AcCyScheduleModelDto {
+  acCyScheduleModelId!: number;
+  academicCycleName!: string;
+  responsibleUser!: string;
+  description!: string;
+  entryDate!: string;
+  generatedSchedules: number;
+}
+
+export class AcCyScheduleDto {
+  acCyScheduleId!: number;
+  totalNumberOfPeriods!: number;
+  totalCoveredPeriods!: number;
 }

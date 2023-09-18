@@ -51,7 +51,7 @@ public class AcCyScheduleAuxDto {
                 .stream()
                 .collect(Collectors.groupingBy(ProfessorSubject::getSubject, Collectors.mapping(ProfessorSubject::getProfessor, Collectors.toSet())));
 
-        professorPeriodMap = professorSubjects
+        this.professorPeriodMap = professorSubjects
                 .stream()
                 .map(ProfessorSubject::getProfessor)
                 .distinct()

@@ -2,13 +2,13 @@
 
 import Header from '@/components/Header.vue';
 import { HeaderEnum } from '@/model/HeaderEnum';
-import type { AcCyScheduleModel } from '@/model/schedule.model';
+import { AcCyScheduleModelDto } from '@/model/schedule.model';
 import router from '@/router';
 import AcCyScheduleModelService from '@/services/AcCyScheduleModelService';
 import { onMounted, reactive, ref, UnwrapNestedRefs } from 'vue';
 
 const academicCycleId = ref(1);
-const acCyScheduleModel: UnwrapNestedRefs<{ data: AcCyScheduleModel[] }> = reactive({ data: [] });
+const acCyScheduleModel: UnwrapNestedRefs<{ data: AcCyScheduleModelDto[] }> = reactive({ data: [] });
 
 async function findAllByAcCy() {
   try {
@@ -41,6 +41,7 @@ onMounted(() => {
             <th scope="col">Responsable</th>
             <th scope="col">Descripci&oacute;n</th>
             <th scope="col">Fecha de creaci&oacute;n</th>
+            <th scope="col">Horarios generados</th>
             <th scope="col" class="th-action">Acciones</th>
           </tr>
         </thead>
@@ -49,8 +50,12 @@ onMounted(() => {
             <td>{{ schedMod.responsibleUser }}</td>
             <td>{{ schedMod.description }}</td>
             <td>{{ schedMod.entryDate }}</td>
+            <td>{{ schedMod.generatedSchedules }}</td>
             <td>
               <div class="d-inline-flex justify-content-end align-items-center gap-1">
+                <router-link :to="'/academic-cycle/' + academicCycleId + '/model/' + schedMod.acCyScheduleModelId" class="btn btn-sm btn-outline-success">
+                  <span class="material-symbols-outlined">calendar_month</span>
+                </router-link>
               </div>
             </td>
           </tr>

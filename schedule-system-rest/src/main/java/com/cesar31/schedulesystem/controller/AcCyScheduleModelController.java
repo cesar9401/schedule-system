@@ -12,6 +12,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -26,15 +27,17 @@ public class AcCyScheduleModelController {
     @GET
     @Path("{academicCycleId}")
     public Response findByAcademicCycle(@PathParam("academicCycleId") Long academicCycleId) {
-        var models = repository.findByAcademicCycle_academicCycleId(academicCycleId);
-        models.forEach(AcCyScheduleModel::clean);
-        return Response.ok(models).build();
+        return Response.ok(repository.findAllDtoByAcademicCycleId(academicCycleId)).build();
     }
 
     @POST
     @Path("{academicCycleId}")
-    public Response startModel(@PathParam("academicCycleId") Long academicCycleId, @Valid AcCyScheduleModel scheduleModel) throws ScheduleSysException {
-        repository.startModel(academicCycleId, scheduleModel);
+    public Response startModel(
+            @PathParam("academicCycleId") Long academicCycleId,
+            @QueryParam("subject-order") Long subjectOrderIntId,
+            @Valid AcCyScheduleModel scheduleModel
+    ) throws ScheduleSysException {
+        repository.startModel(academicCycleId, subjectOrderIntId, scheduleModel);
         return Response.ok().build();
     }
 }
