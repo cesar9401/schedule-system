@@ -1,5 +1,7 @@
 package com.cesar31.schedulesystem.model;
 
+import com.cesar31.schedulesystem.util.TimeUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.CascadeType;
@@ -14,7 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,11 +36,14 @@ public class AcCyScheduleModel {
     private AcademicCycle academicCycle;
 
     @Column(name = "responsible_user")
+    @NotNull
     private String responsibleUser;
 
     @Column(name = "description")
+    @NotNull
     private String description;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TimeUtil.DATETIME_FORMAT)
     @Column(name = "entry_date")
     private LocalDateTime entryDate;
 
@@ -49,6 +56,12 @@ public class AcCyScheduleModel {
 
     public AcCyScheduleModel() {
         this.entryDate = LocalDateTime.now();
+        this.acCySchedules = new ArrayList<>();
+    }
+
+    public void clean() {
+        this.academicCycle = null;
+        this.acCySchedules = new ArrayList<>();
     }
 
     public Long getAcCyScheduleModelId() {

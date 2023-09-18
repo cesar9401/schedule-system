@@ -84,3 +84,11 @@ export class AcCyClassDay {
   start: any | undefined = { hours: new Date().getHours(), minutes: new Date().getMinutes() };
   end: any | undefined = { hours: new Date().getHours(), minutes: new Date().getMinutes() };
 }
+
+export class AcCyScheduleModel {
+  acCyScheduleModelId!: number;
+  academicCycle!: AcademicCycle;
+  responsibleUser!: string;
+  description!: string;
+  entryDate!: string;
+}

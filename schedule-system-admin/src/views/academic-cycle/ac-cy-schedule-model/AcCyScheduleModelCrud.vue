@@ -1,10 +1,24 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue';
 import { HeaderEnum } from '@/model/HeaderEnum';
+import { AcCyScheduleModel } from '@/model/schedule.model';
 import router from '@/router';
-import { onMounted, ref } from 'vue';
+import AcCyScheduleModelService from '@/services/AcCyScheduleModelService';
+import { onMounted, reactive, ref } from 'vue';
 
+const acCyScheduleModel = reactive({ data: new AcCyScheduleModel() });
 const academicCycleId = ref(1);
+
+async function create() {
+  try {
+    const response = await AcCyScheduleModelService.save(academicCycleId.value, acCyScheduleModel.data);
+    window.alert('Cambios guardados!');
+    await router.push({ name: 'all-ac-cy-models' });
+  } catch (e) {
+    console.error(e);
+    window.alert('Something went wrong');
+  }
+}
 
 onMounted(() => {
   const acCyId = router.currentRoute.value.params['academicCycleId'];
@@ -19,15 +33,15 @@ onMounted(() => {
     <div class="my-5">
       <h1 class="text-success text-center">Agregar simulaci&oacute;n</h1>
     </div>
-    <form>
+    <form @submit.prevent="create">
       <div class="row">
         <div class="mb-3 col-lg-6 col-12">
           <label for="name">Usuario responsable</label>
-          <input id="name" class="form-control" placeholder="Eje: Jose Perez Leon">
+          <input v-model="acCyScheduleModel.data.responsibleUser" id="name" class="form-control" placeholder="Eje: Jose Perez Leon">
         </div>
         <div class="mb-3 col-lg-6 col-12">
           <label for="description">Descripci&oacute;n</label>
-          <input id="description" class="form-control" placeholder="Eje: Esta es la simulacion del modelo...">
+          <input v-model="acCyScheduleModel.data.description" id="description" class="form-control" placeholder="Eje: Esta es la simulacion del modelo...">
         </div>
       </div>
       <div class="d-flex justify-content-end my-4">

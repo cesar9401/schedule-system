@@ -39,13 +39,13 @@ public abstract class AcCyScheduleModelRepository extends AbstractEntityReposito
     @Inject
     Logger logger;
 
-    public void startModel(Long academicCycleId) throws ScheduleSysException {
-        var acCy = acCyRepository.findByIdOrLast(academicCycleId);
+    public abstract List<AcCyScheduleModel> findByAcademicCycle_academicCycleId(Long academicCycleId);
 
+    public void startModel(Long academicCycleId, AcCyScheduleModel scheduleModel) throws ScheduleSysException {
+        var acCy = acCyRepository.findBy(academicCycleId);
         if (acCy == null)
             throw new ScheduleSysException("academic_cycle_not_found")
                     .status(Response.Status.NOT_FOUND);
-
 
         var acCySubjects = acCySubjectRepository.findByAcademicCycle_academicCycleId(acCy.getAcademicCycleId());
         var professorSubjects = professorSubjectRepository.findAll();
@@ -54,24 +54,20 @@ public abstract class AcCyScheduleModelRepository extends AbstractEntityReposito
         var scheduleAux = new AcCyScheduleAuxDto(schedule, acCySubjects, professorSubjects);
         var schedulesAUx = this.createSchedule(scheduleAux);
 
-        // TODO: get this from request
-        var acCyScheduleModel = new AcCyScheduleModel();
-        acCyScheduleModel.setAcademicCycle(acCy);
-        acCyScheduleModel.setResponsibleUser("cesartzoc201430927@cunoc.edu.gt");
-        acCyScheduleModel.setDescription("Primer modelo :D");
-
         var schedules = schedulesAUx
                 .stream()
                 .map(sched -> {
                     var acCySchedule = sched.getSchedule();
                     acCySchedule.getAcCySchedSubjs().forEach(schedSubj -> schedSubj.setAcCySchedule(acCySchedule));
-                    acCySchedule.setAcCyScheduleModel(acCyScheduleModel);
+                    acCySchedule.setAcCyScheduleModel(scheduleModel);
                     return acCySchedule;
                 })
                 .collect(Collectors.toList());
 
-        acCyScheduleModel.setAcCySchedules(schedules);
-        this.save(acCyScheduleModel);
+        scheduleModel.setAcademicCycle(acCy);
+        scheduleModel.setAcCySchedules(schedules);
+        this.save(scheduleModel);
+        logger.info("Model created successfully");
     }
 
     private AcCySchedule createEmptySchedule(Long academicCycleId) throws ScheduleSysException {

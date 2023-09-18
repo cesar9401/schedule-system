@@ -1,11 +1,14 @@
 package com.cesar31.schedulesystem.controller;
 
 import com.cesar31.schedulesystem.exception.ScheduleSysException;
+import com.cesar31.schedulesystem.model.AcCyScheduleModel;
 import com.cesar31.schedulesystem.repository.AcCyScheduleModelRepository;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -22,8 +25,16 @@ public class AcCyScheduleModelController {
 
     @GET
     @Path("{academicCycleId}")
-    public Response startModel(@PathParam("academicCycleId") Long academicCycleId) throws ScheduleSysException {
-        repository.startModel(academicCycleId);
+    public Response findByAcademicCycle(@PathParam("academicCycleId") Long academicCycleId) {
+        var models = repository.findByAcademicCycle_academicCycleId(academicCycleId);
+        models.forEach(AcCyScheduleModel::clean);
+        return Response.ok(models).build();
+    }
+
+    @POST
+    @Path("{academicCycleId}")
+    public Response startModel(@PathParam("academicCycleId") Long academicCycleId, @Valid AcCyScheduleModel scheduleModel) throws ScheduleSysException {
+        repository.startModel(academicCycleId, scheduleModel);
         return Response.ok().build();
     }
 }
