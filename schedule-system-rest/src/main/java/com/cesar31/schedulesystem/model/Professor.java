@@ -77,13 +77,14 @@ public class Professor {
     public void merge(Professor other) {
         this.fullName = other.fullName;
         this.email = other.email;
-        this.professorSubjects = other.professorSubjects;
         // this.dateOfHire = other.dateOfHire;
         this.averageQualification = other.averageQualification;
+        this.professorSubjects = other.professorSubjects;
+        this.contractDays = other.contractDays;
     }
 
     public void clean() {
-        this.contractDays = new ArrayList<>();
+        // this.contractDays = new ArrayList<>();
         // this.professorSubjects = new ArrayList<>();
         this.acCySchedSubjs = new ArrayList<>();
     }

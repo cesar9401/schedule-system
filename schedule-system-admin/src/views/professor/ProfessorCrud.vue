@@ -1,9 +1,11 @@
 <script setup lang="ts">
 
 import Header from '@/components/Header.vue';
+import { CategoryEnum } from '@/model/CategoryEnum';
 import { HeaderEnum } from '@/model/HeaderEnum';
-import { Professor, ProfessorSubject, Subject } from '@/model/schedule.model';
+import { Category, Professor, ProfessorContractDay, ProfessorSubject, Subject } from '@/model/schedule.model';
 import router from '@/router';
+import CategoryService from '@/services/CategoryService';
 import ProfessorService from '@/services/ProfessorService';
 import SubjectService from '@/services/SubjectService';
 import { onMounted, reactive, UnwrapNestedRefs } from 'vue';
@@ -11,6 +13,7 @@ import VueMultiselect from 'vue-multiselect';
 
 const professor = reactive({ data: new Professor() });
 const subjects: UnwrapNestedRefs<{ data: Subject[] }> = reactive({ data: [] });
+const days: UnwrapNestedRefs<{ data: Category[] }> = reactive({ data: [] })
 
 async function create() {
   try {
@@ -27,7 +30,10 @@ async function getSubjectsAndProfessorById() {
   try {
     // find subjects
     const subjResponse = await SubjectService.findAll();
-    subjects.data = subjResponse.data;
+    subjects.data = [...subjResponse.data];
+
+    const catResponse = await CategoryService.findByParentInternalId(CategoryEnum.DAY_OF_WEEK);
+    days.data = [...catResponse.data];
 
     const id = router.currentRoute.value.params['id'];
     if (!id) return;
@@ -48,6 +54,14 @@ function addProfessorSubject() {
 
 function removeProfessorSubject(index: number) {
   professor.data.professorSubjects.splice(index, 1);
+}
+
+function addProfessorContractDay() {
+  professor.data.contractDays.push(new ProfessorContractDay());
+}
+
+function removeProfessorContractDay(index: number) {
+  professor.data.contractDays.splice(index, 1);
 }
 
 onMounted(() => {
@@ -97,7 +111,7 @@ onMounted(() => {
               <label>A&ntilde;os de experiencia</label>
               <input v-model="profSubj.yearsOfExperience" class="form-control" placeholder="Eje: 3">
             </div>
-            <div class="mb-3 mt-auto">
+            <div class="mb-3">
               <button @click="removeProfessorSubject(index)" type="button" class="btn btn-outline-danger d-inline-flex btn-sm">
                 <span class="material-symbols-outlined">delete</span>
               </button>
@@ -106,13 +120,46 @@ onMounted(() => {
           <div class="text-end">
             <button @click="addProfessorSubject()" type="button" class="btn btn-outline-success d-inline-flex justify-content-center align-items-center gap-2">
               <span class="material-symbols-outlined">add</span>
-              Nuevo curso
+              Agregar
+            </button>
+          </div>
+        </div>
+
+        <div id="professor-contract-area" class="row border-top border-bottom p-4 mt-2">
+          <div class="my-3 col-12">
+            <h1 class="text-center h4">Horas de contrato</h1>
+          </div>
+
+          <div class="d-flex align-items-end justify-content-between gap-2"> <!-- v-for="(profSubj, index) in professor.data.professorSubjects" :key="index">-->
+            <div class="mb-3 col-4">
+              <label>Curso</label>
+              <VueMultiselect :options="days.data" track-by="categoryId" label="description" class="w-100"></VueMultiselect>
+            </div>
+
+            <div class="mb-3 flex-fill">
+              <label>Hora de entrada</label>
+            </div>
+
+            <div class="mb-3 flex-fill">
+              <label>Hora de salida</label>
+            </div>
+
+            <div class="mb-3 mt-auto">
+              <button type="button" class="btn btn-outline-danger d-inline-flex btn-sm">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+          </div>
+          <div class="text-end">
+            <button type="button" class="btn btn-outline-success d-inline-flex justify-content-center align-items-center gap-2">
+              <span class="material-symbols-outlined">add</span>
+              Agregar
             </button>
           </div>
         </div>
       </div>
       <div class="d-flex justify-content-end my-4">
-        <button type="submit" class="btn btn-success col-2">Agregar</button>
+        <button type="submit" class="btn btn-success col-2">Guardar</button>
       </div>
     </form>
   </div>

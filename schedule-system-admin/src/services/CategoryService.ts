@@ -9,3 +9,5 @@ class CategoryService {
     return http.get(`${this.URL}/by-parent-internal-id/${id}`);
   }
 }
+
+export default new CategoryService();

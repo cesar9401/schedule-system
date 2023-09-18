@@ -29,6 +29,7 @@ export class Professor {
   averageQualification!: number;
 
   professorSubjects: ProfessorSubject[] = [];
+  contractDays: ProfessorContractDay[] = [];
 }
 
 export class ProfessorSubject {
@@ -37,4 +38,12 @@ export class ProfessorSubject {
   subject!: Subject;
   qualification!: number;
   yearsOfExperience: number;
+}
+
+export class ProfessorContractDay {
+  professorContractDayId!: number;
+  professor!: Professor;
+  catDay!: Category;
+  startTime!: string;
+  endTime!: string
 }
