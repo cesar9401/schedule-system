@@ -27,4 +27,14 @@ export class Professor {
   email!: string;
   dateOfHire!: string;
   averageQualification!: number;
+
+  professorSubjects: ProfessorSubject[] = [];
+}
+
+export class ProfessorSubject {
+  professorSubjectId!: number;
+  professor!: Professor;
+  subject!: Subject;
+  qualification!: number;
+  yearsOfExperience: number;
 }

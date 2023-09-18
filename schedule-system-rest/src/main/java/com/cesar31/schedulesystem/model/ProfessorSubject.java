@@ -27,7 +27,7 @@ public class ProfessorSubject {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id")
-    @JsonBackReference(value = "prefessor")
+    @JsonBackReference(value = "professor")
     private Professor professor;
 
     /**
@@ -35,7 +35,7 @@ public class ProfessorSubject {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
-    @JsonBackReference(value = "subject")
+//    @JsonBackReference(value = "subject")
     private Subject subject;
 
     @Column(name = "qualification")

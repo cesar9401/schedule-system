@@ -58,7 +58,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="d-flex justify-content-end my-4">
-        <button type="submit" class="btn btn-success col-1">Agregar</button>
+        <button type="submit" class="btn btn-success col-2">Agregar</button>
       </div>
     </form>
   </div>

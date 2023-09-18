@@ -49,20 +49,20 @@ public class Subject {
     @NotNull
     private Double subjectIndex;
 
-    /**
-     * Bidirectional relationship with {@link ProfessorSubject}
-     */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "subject")
-    private List<ProfessorSubject> professorSubjects;
+//    /**
+//     * Bidirectional relationship with {@link ProfessorSubject}
+//     */
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference(value = "subject")
+//    private List<ProfessorSubject> professorSubjects;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "subject")
-    private List<AcCySubject> acCySubjects;
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference(value = "subject")
+//    private List<AcCySubject> acCySubjects;
 
     public Subject() {
-        this.professorSubjects = new ArrayList<>();
-        this.acCySubjects = new ArrayList<>();
+//        this.professorSubjects = new ArrayList<>();
+//        this.acCySubjects = new ArrayList<>();
     }
 
     public void merge(Subject other) {
@@ -74,8 +74,8 @@ public class Subject {
     }
 
     public void clean() {
-        this.professorSubjects = new ArrayList<>();
-        this.acCySubjects = new ArrayList<>();
+//        this.professorSubjects = new ArrayList<>();
+//        this.acCySubjects = new ArrayList<>();
     }
 
     public Long getSubjectId() {
@@ -126,21 +126,21 @@ public class Subject {
         this.subjectIndex = subjectIndex;
     }
 
-    public List<ProfessorSubject> getProfessorSubjects() {
-        return professorSubjects;
-    }
-
-    public void setProfessorSubjects(List<ProfessorSubject> professorSubjects) {
-        this.professorSubjects = professorSubjects;
-    }
-
-    public List<AcCySubject> getAcCySubjects() {
-        return acCySubjects;
-    }
-
-    public void setAcCySubjects(List<AcCySubject> acCySubjects) {
-        this.acCySubjects = acCySubjects;
-    }
+//    public List<ProfessorSubject> getProfessorSubjects() {
+//        return professorSubjects;
+//    }
+//
+//    public void setProfessorSubjects(List<ProfessorSubject> professorSubjects) {
+//        this.professorSubjects = professorSubjects;
+//    }
+//
+//    public List<AcCySubject> getAcCySubjects() {
+//        return acCySubjects;
+//    }
+//
+//    public void setAcCySubjects(List<AcCySubject> acCySubjects) {
+//        this.acCySubjects = acCySubjects;
+//    }
 
     @Override
     public boolean equals(Object object) {
