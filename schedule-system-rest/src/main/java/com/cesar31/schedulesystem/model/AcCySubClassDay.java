@@ -13,7 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ac_cy_sub_class_day_id")
+@Table(name = "ac_cy_sub_class_day")
 public class AcCySubClassDay {
 
     @Id

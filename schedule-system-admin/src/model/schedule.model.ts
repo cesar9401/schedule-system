@@ -80,4 +80,7 @@ export class AcCyClassDay {
   catDay!: Category;
   startTime!: string;
   endTime!: string;
+
+  start: any | undefined = { hours: new Date().getHours(), minutes: new Date().getMinutes() };
+  end: any | undefined = { hours: new Date().getHours(), minutes: new Date().getMinutes() };
 }

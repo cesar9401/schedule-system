@@ -61,6 +61,20 @@ const router = createRouter({
       path: '/professor/:id',
       name: 'edit-professor',
       component: () => import('../views/professor/ProfessorCrud.vue')
+    },
+    {
+      path: '/academic-cycle',
+      name: 'all-academic-cycles',
+      component: () => import('../views/academic-cycle/AcademicCycleListView.vue')
+    },
+    {
+      path: '/academic-cycle/add',
+      name: 'add-academic-cycle',
+      component: () => import('../views/academic-cycle/AcademicCycleCrud.vue')
+    },    {
+      path: '/academic-cycle/:id',
+      name: 'edit-academic-cycle',
+      component: () => import('../views/academic-cycle/AcademicCycleCrud.vue')
     }
   ]
 })

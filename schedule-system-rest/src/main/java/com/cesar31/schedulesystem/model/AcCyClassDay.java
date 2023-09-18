@@ -3,6 +3,7 @@ package com.cesar31.schedulesystem.model;
 import com.cesar31.schedulesystem.util.TimeUtil;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ac_cy_class_day")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AcCyClassDay {
 
     @Id

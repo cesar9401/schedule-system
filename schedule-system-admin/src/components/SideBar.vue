@@ -17,6 +17,11 @@ const items: item[] = [
     name: 'Docentes',
     icon: 'groups',
     path: '/professor'
+  },
+  {
+    name: 'Ciclos academicos',
+    icon: 'data_table',
+    path: '/academic-cycle'
   }
 ]
 

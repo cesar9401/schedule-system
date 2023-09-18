@@ -72,6 +72,7 @@ public class AcCySubject {
     private List<AcCySubjAssg> acCySubjAssignments;
 
     public AcCySubject() {
+        this.priority = 1;
         this.acCySubClassDays = new ArrayList<>();
         this.acCySubjAssignments = new ArrayList<>();
     }

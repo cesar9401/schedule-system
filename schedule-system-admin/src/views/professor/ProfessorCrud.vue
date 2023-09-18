@@ -64,9 +64,6 @@ function setStartAndEndTimeForBack(contract: ProfessorContractDay) {
 
   contract.startTime = `1900-01-01 ${startH}:${startM}:00`;
   contract.endTime = `1900-01-01 ${endH}:${endM}:00`;
-
-  console.log(contract.startTime);
-  console.log(contract.endTime);
 }
 
 function setStartAndEndTimeForView(contract: ProfessorContractDay) {
@@ -128,12 +125,10 @@ onMounted(() => {
             <h1 class="text-center h4">Cursos</h1>
           </div>
 
-          <div class="d-flex align-items-end justify-content-between gap-2"
-               v-for="(profSubj, index) in professor.data.professorSubjects" :key="index">
+          <div class="d-flex align-items-end justify-content-between gap-2" v-for="(profSubj, index) in professor.data.professorSubjects" :key="index">
             <div class="mb-3 col-4">
               <label>Curso</label>
-              <VueMultiselect v-model="profSubj.subject" :options="subjects.data" track-by="subjectId" label="name"
-                              class="w-100"></VueMultiselect>
+              <VueMultiselect v-model="profSubj.subject" :options="subjects.data" track-by="subjectId" label="name" class="w-100"></VueMultiselect>
             </div>
             <div class="mb-3 flex-fill">
               <label>Calificaci&oacute;n</label>
@@ -144,15 +139,13 @@ onMounted(() => {
               <input v-model="profSubj.yearsOfExperience" class="form-control" placeholder="Eje: 3">
             </div>
             <div class="mb-3">
-              <button @click="removeProfessorSubject(index)" type="button"
-                      class="btn btn-outline-danger d-inline-flex btn-sm">
+              <button @click="removeProfessorSubject(index)" type="button" class="btn btn-outline-danger d-inline-flex btn-sm">
                 <span class="material-symbols-outlined">delete</span>
               </button>
             </div>
           </div>
           <div class="text-end">
-            <button @click="addProfessorSubject()" type="button"
-                    class="btn btn-outline-success d-inline-flex justify-content-center align-items-center gap-2">
+            <button @click="addProfessorSubject()" type="button" class="btn btn-outline-success d-inline-flex justify-content-center align-items-center gap-2">
               <span class="material-symbols-outlined">add</span>
               Agregar
             </button>
@@ -166,7 +159,7 @@ onMounted(() => {
 
           <div class="d-flex align-items-end justify-content-between gap-2" v-for="(contractDay, index) in professor.data.contractDays" :key="index">
             <div class="mb-3 col-4">
-              <label>Curso</label>
+              <label>D&iacute;a</label>
               <VueMultiselect v-model="contractDay.catDay" :options="days.data" track-by="categoryId" label="description" class="w-100"></VueMultiselect>
             </div>
 

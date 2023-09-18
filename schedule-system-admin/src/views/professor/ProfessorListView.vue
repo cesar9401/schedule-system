@@ -41,19 +41,19 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody class="table-group-divider">
-        <tr v-for="professor of professors.data">
-          <td>{{ professor.fullName }}</td>
-          <td>{{ professor.email }}</td>
-          <td>{{ professor.dateOfHire }}</td>
-          <td>{{ professor.averageQualification }}</td>
-          <td>
-            <div class="d-inline-flex justify-content-end align-items-center">
-              <router-link :to="'/professor/' + professor.professorId" class="btn btn-sm btn-outline-success">
-                <span class="material-symbols-outlined">edit</span>
-              </router-link>
-            </div>
-          </td>
-        </tr>
+          <tr v-for="professor of professors.data">
+            <td>{{ professor.fullName }}</td>
+            <td>{{ professor.email }}</td>
+            <td>{{ professor.dateOfHire }}</td>
+            <td>{{ professor.averageQualification }}</td>
+            <td>
+              <div class="d-inline-flex justify-content-end align-items-center">
+                <router-link :to="'/professor/' + professor.professorId" class="btn btn-sm btn-outline-success">
+                  <span class="material-symbols-outlined">edit</span>
+                </router-link>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
