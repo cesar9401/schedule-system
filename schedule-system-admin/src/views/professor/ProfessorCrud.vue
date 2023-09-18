@@ -7,16 +7,16 @@ import router from '@/router';
 import ProfessorService from '@/services/ProfessorService';
 import SubjectService from '@/services/SubjectService';
 import { onMounted, reactive, UnwrapNestedRefs } from 'vue';
+import VueMultiselect from 'vue-multiselect';
 
 const professor = reactive({ data: new Professor() });
 const subjects: UnwrapNestedRefs<{ data: Subject[] }> = reactive({ data: [] });
 
 async function create() {
   try {
-    console.log(professor.data);
-    // const response = await ProfessorService.save(professor.data);
-    // window.alert('Cambios guardados');
-    // await router.push({ name: 'all-professors' });
+    const response = await ProfessorService.save(professor.data);
+    window.alert('Cambios guardados');
+    await router.push({ name: 'all-professors' });
   } catch (e) {
     console.error(e);
     window.alert('Something went  wrong!');
@@ -48,10 +48,6 @@ function addProfessorSubject() {
 
 function removeProfessorSubject(index: number) {
   professor.data.professorSubjects.splice(index, 1);
-}
-
-function onAnySelectChange(e: Event) {
-  console.log(((e.target) as HTMLSelectElement).value);
 }
 
 onMounted(() => {
@@ -89,20 +85,17 @@ onMounted(() => {
           </div>
 
           <div class="d-flex align-items-end justify-content-between gap-2" v-for="(profSubj, index) in professor.data.professorSubjects" :key="index">
-            <div class="mb-3 flex-fill">
+            <div class="mb-3 col-4">
               <label>Curso</label>
-              <select @change="onAnySelectChange($event)" class="form-select">
-                <option selected value="">Select a subject</option>
-                <option v-for="subj of subjects.data" :value="subj.subjectId" :key="subj.subjectId">{{ subj.name }} ({{ subj.code }})</option>
-              </select>
+              <VueMultiselect v-model="profSubj.subject" :options="subjects.data" track-by="subjectId" label="name" class="w-100"></VueMultiselect>
             </div>
             <div class="mb-3 flex-fill">
               <label>Calificaci&oacute;n</label>
-              <input class="form-control" placeholder="Eje: 75.5">
+              <input v-model="profSubj.qualification" class="form-control" placeholder="Eje: 75.5">
             </div>
             <div class="mb-3 flex-fill">
               <label>A&ntilde;os de experiencia</label>
-              <input class="form-control" placeholder="Eje: 3">
+              <input v-model="profSubj.yearsOfExperience" class="form-control" placeholder="Eje: 3">
             </div>
             <div class="mb-3 mt-auto">
               <button @click="removeProfessorSubject(index)" type="button" class="btn btn-outline-danger d-inline-flex btn-sm">

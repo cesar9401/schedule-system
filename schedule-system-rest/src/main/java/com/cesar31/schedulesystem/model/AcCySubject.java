@@ -38,11 +38,10 @@ public class AcCySubject {
     private AcademicCycle academicCycle;
 
     /**
-     * Bidirectional relationship with {@link Subject}
+     * Unidirectional relationship with {@link Subject}
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
-    @JsonBackReference(value = "academicCycle")
     private Subject subject;
 
     @Column(name = "section_code")

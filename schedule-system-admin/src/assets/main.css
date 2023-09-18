@@ -4,6 +4,8 @@
 
 @import "toggle.scss";
 
+@import "vue-multiselect/dist/vue-multiselect.css";
+
 .th-action {
   width: 10%;
 }

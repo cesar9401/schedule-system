@@ -35,7 +35,6 @@ public class ProfessorSubject {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
-//    @JsonBackReference(value = "subject")
     private Subject subject;
 
     @Column(name = "qualification")

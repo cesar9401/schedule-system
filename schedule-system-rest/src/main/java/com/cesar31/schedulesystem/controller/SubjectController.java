@@ -27,7 +27,6 @@ public class SubjectController {
     @GET
     public Response findAll() {
         var subjects = repository.findAll();
-        subjects.forEach(Subject::clean);
         return Response.ok(subjects).build();
     }
 
@@ -38,7 +37,6 @@ public class SubjectController {
         if (subject == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        subject.clean();
         return Response.ok(subject).build();
     }
 
