@@ -1,5 +1,6 @@
 package com.cesar31.schedulesystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.CascadeType;
@@ -28,9 +29,13 @@ public class AcCySchedule {
     @Column(name = "ac_cy_schedule_id")
     private Long acCyScheduleId;
 
-    @JoinColumn(name = "academic_cycle_id")
+    /**
+     * Bidirectional relationship with {@link AcCyScheduleModel}
+     */
+    @JoinColumn(name = "ac_cy_schedule_model_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private AcademicCycle academicCycle;
+    @JsonBackReference(value = "acCyScheduleModel")
+    private AcCyScheduleModel acCyScheduleModel;
 
     @Column(name = "is_valid")
     private Boolean isValid;
@@ -45,7 +50,7 @@ public class AcCySchedule {
     }
 
     public AcCySchedule(AcCySchedule other) {
-        this.academicCycle = other.academicCycle;
+        this.acCyScheduleModel = other.acCyScheduleModel;
         this.isValid = other.isValid;
         this.acCySchedSubjs = other
                 .acCySchedSubjs
@@ -62,12 +67,12 @@ public class AcCySchedule {
         this.acCyScheduleId = acCyScheduleId;
     }
 
-    public AcademicCycle getAcademicCycle() {
-        return academicCycle;
+    public AcCyScheduleModel getAcCyScheduleModel() {
+        return acCyScheduleModel;
     }
 
-    public void setAcademicCycle(AcademicCycle academicCycle) {
-        this.academicCycle = academicCycle;
+    public void setAcCyScheduleModel(AcCyScheduleModel acCyScheduleModel) {
+        this.acCyScheduleModel = acCyScheduleModel;
     }
 
     public Boolean getValid() {

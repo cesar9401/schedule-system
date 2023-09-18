@@ -21,12 +21,6 @@ public class AcCyScheduleController {
     AcCyScheduleRepository acCyScheduleRepository;
 
     @GET
-    public Response check() throws ScheduleSysException {
-        acCyScheduleRepository.createScheduleByAcCyId(null);
-        return Response.ok().build();
-    }
-
-    @GET
     @Path("export/{acCyScheduleId}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response export(@PathParam("acCyScheduleId") Long acCyScheduleId) throws ScheduleSysException {
