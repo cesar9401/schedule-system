@@ -1,6 +1,10 @@
 package com.cesar31.schedulesystem.model;
 
+import com.cesar31.schedulesystem.util.TimeUtil;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +20,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "professor_contract_day")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProfessorContractDay {
 
     @Id
@@ -36,9 +41,11 @@ public class ProfessorContractDay {
     @JoinColumn(name = "cat_day")
     private Category catDay;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TimeUtil.DATETIME_FORMAT)
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TimeUtil.DATETIME_FORMAT)
     @Column(name = "end_time")
     private LocalDateTime endTime;
 

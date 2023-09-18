@@ -45,5 +45,9 @@ export class ProfessorContractDay {
   professor!: Professor;
   catDay!: Category;
   startTime!: string;
-  endTime!: string
+  endTime!: string;
+
+  // for frontend only
+  start: any | undefined = { hours: new Date().getHours(), minutes: new Date().getMinutes() };
+  end: any | undefined = { hours: new Date().getHours(), minutes: new Date().getMinutes() };
 }

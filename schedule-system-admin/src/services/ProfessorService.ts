@@ -1,15 +1,16 @@
 import type { Professor } from '@/model/schedule.model';
 import { http } from '@/services/HttpClient';
+import type { AxiosResponse } from 'axios';
 
 class ProfessorService {
 
   private URL = '/professors';
 
-  findAll() {
+  findAll(): Promise<AxiosResponse<Professor[]>> {
     return http.get(this.URL);
   }
 
-  findById(id: number) {
+  findById(id: number): Promise<AxiosResponse<Professor>> {
     return http.get(`${this.URL}/${id}`);
   }
 

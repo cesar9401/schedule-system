@@ -2,6 +2,7 @@ package com.cesar31.schedulesystem.model;
 
 import com.cesar31.schedulesystem.util.TimeUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.CascadeType;

@@ -6,6 +6,8 @@
 
 @import "vue-multiselect/dist/vue-multiselect.css";
 
+@import '@vuepic/vue-datepicker/dist/main.css';
+
 .th-action {
   width: 10%;
 }
