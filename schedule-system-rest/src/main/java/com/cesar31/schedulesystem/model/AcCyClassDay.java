@@ -1,6 +1,9 @@
 package com.cesar31.schedulesystem.model;
 
+import com.cesar31.schedulesystem.util.TimeUtil;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,9 +39,11 @@ public class AcCyClassDay {
     @JoinColumn(name = "cat_day")
     private Category catDay;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TimeUtil.DATETIME_FORMAT)
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = TimeUtil.DATETIME_FORMAT)
     @Column(name = "end_time")
     private LocalDateTime endTime;
 

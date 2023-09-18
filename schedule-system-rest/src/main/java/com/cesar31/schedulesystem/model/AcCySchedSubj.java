@@ -34,11 +34,10 @@ public class AcCySchedSubj {
     private AcCySchedule acCySchedule;
 
     /**
-     * Bidirectional relationship with {@link AcCySubject}
+     * Unidirectional relationship with {@link AcCySubject}
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ac_cy_subject_id")
-    @JsonBackReference(value = "acCySubject")
     private AcCySubject acCySubject;
 
     /**

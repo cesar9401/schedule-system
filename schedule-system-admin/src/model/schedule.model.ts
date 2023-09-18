@@ -51,3 +51,33 @@ export class ProfessorContractDay {
   start: any | undefined = { hours: new Date().getHours(), minutes: new Date().getMinutes() };
   end: any | undefined = { hours: new Date().getHours(), minutes: new Date().getMinutes() };
 }
+
+export class AcademicCycle {
+  academicCycleId!: number;
+  name!: string;
+  description!: string;
+  entryDate!: string;
+  startDate!: string;
+  endDate!: string;
+
+  acCySubjects: AcCySubject[] = [];
+  classDays: AcCyClassDay[] = [];
+}
+
+export class AcCySubject {
+  acCySubjectId!: number;
+  academicCycle!: AcademicCycle;
+  subject!: Subject;
+  sectionCode!: string;
+  priority!: number;
+  numberOfPeriods: number;
+  assignedStudents!: number;
+}
+
+export class AcCyClassDay {
+  acCyClassDayId!: number;
+  academicCycle!: AcademicCycle;
+  catDay!: Category;
+  startTime!: string;
+  endTime!: string;
+}

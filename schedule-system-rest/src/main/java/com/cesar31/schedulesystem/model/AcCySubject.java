@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +54,9 @@ public class AcCySubject {
     @Column(name = "number_of_periods")
     private Integer numberOfPeriods;
 
+    @Column(name = "assigned_students")
+    private Integer assignedStudents;
+
     /**
      * Bidirectional relationship with {@link AcCySubClassDay}
      */
@@ -67,12 +71,10 @@ public class AcCySubject {
     @JsonManagedReference(value = "acCySubject")
     private List<AcCySubjAssg> acCySubjAssignments;
 
-    /**
-     * Bidirectional relationship with {@link AcCySchedSubj}
-     */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "acCySubject", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "acCySubject")
-    private List<AcCySchedSubj> acCySchedSubjs;
+    public AcCySubject() {
+        this.acCySubClassDays = new ArrayList<>();
+        this.acCySubjAssignments = new ArrayList<>();
+    }
 
     public Long getAcCySubjectId() {
         return acCySubjectId;
@@ -122,6 +124,14 @@ public class AcCySubject {
         this.numberOfPeriods = numberOfPeriods;
     }
 
+    public Integer getAssignedStudents() {
+        return assignedStudents;
+    }
+
+    public void setAssignedStudents(Integer assignedStudents) {
+        this.assignedStudents = assignedStudents;
+    }
+
     public List<AcCySubClassDay> getAcCySubClassDays() {
         return acCySubClassDays;
     }
@@ -136,14 +146,6 @@ public class AcCySubject {
 
     public void setAcCySubjAssignments(List<AcCySubjAssg> acCySubjAssignments) {
         this.acCySubjAssignments = acCySubjAssignments;
-    }
-
-    public List<AcCySchedSubj> getAcCySchedSubjs() {
-        return acCySchedSubjs;
-    }
-
-    public void setAcCySchedSubjs(List<AcCySchedSubj> acCySchedSubjs) {
-        this.acCySchedSubjs = acCySchedSubjs;
     }
 
     @Override
